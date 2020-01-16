@@ -126,3 +126,5 @@ DBG_disp256		@301
 DBG_di2p256		@302
 DBG_di3p256		@303
 DBG_decideState @304
+
+fix_StoneCurseDurationCalculation	@201 NONAME

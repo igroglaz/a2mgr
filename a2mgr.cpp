@@ -249,3 +249,6 @@ loc_58203E:
 		jmp		edx
 	}
 }
+
+
+#include "spells_fix.cpp"

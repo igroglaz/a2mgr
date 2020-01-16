@@ -124,3 +124,4 @@
 
 //0 304 4688CF
 
+1 201 5233E6 // : fix_StoneCurseDurationCalculation
