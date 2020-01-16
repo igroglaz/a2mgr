@@ -10644,7 +10644,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Flame Thrower</equipItem1>
 			<equipItem2></equipItem2>
@@ -10724,7 +10724,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Flame Thrower</equipItem1>
 			<equipItem2></equipItem2>
@@ -11104,7 +11104,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Fire_Arrow:35}</equipItem1>
 			<equipItem2></equipItem2>
@@ -11182,7 +11182,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Fire_Arrow:99}</equipItem1>
 			<equipItem2></equipItem2>
@@ -13653,7 +13653,7 @@
 			<knownSpells>
 				<count>4</count>
 				<item_version>0</item_version>
-				<item>Diamond Dust</item>
+				<item>Ice Missile</item>
 				<item>Heal</item>
 				<item>Shield</item>
 				<item>Stone Curse</item>
@@ -13661,7 +13661,7 @@
 			<skillFire>80</skillFire>
 			<skillWater>80</skillWater>
 			<skillAir>80</skillAir>
-			<skillEarth>80</skillEarth>
+			<skillEarth>150</skillEarth>
 			<skillAstral>80</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Ice_Missile:10}</equipItem1>
 			<equipItem2></equipItem2>
@@ -13736,7 +13736,7 @@
 			<skillFire>80</skillFire>
 			<skillWater>80</skillWater>
 			<skillAir>80</skillAir>
-			<skillEarth>80</skillEarth>
+			<skillEarth>150</skillEarth>
 			<skillAstral>80</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Ice_Missile:10}</equipItem1>
 			<equipItem2></equipItem2>
@@ -13879,7 +13879,7 @@
 			<knownSpells>
 				<count>4</count>
 				<item_version>0</item_version>
-				<item>Diamond Dust</item>
+				<item>Ice Missile</item>
 				<item>Heal</item>
 				<item>Shield</item>
 				<item>Stone Curse</item>
@@ -13887,7 +13887,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Ice_Missile:35}</equipItem1>
 			<equipItem2></equipItem2>
@@ -13955,7 +13955,7 @@
 			<knownSpells>
 				<count>4</count>
 				<item_version>0</item_version>
-				<item>Blizzard</item>
+				<item>Poison Cloud</item>
 				<item>Heal</item>
 				<item>Shield</item>
 				<item>Stone Curse</item>
@@ -13963,7 +13963,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Ice_Missile:35}</equipItem1>
 			<equipItem2></equipItem2>
@@ -14106,7 +14106,7 @@
 			<knownSpells>
 				<count>4</count>
 				<item_version>0</item_version>
-				<item>Diamond Dust</item>
+				<item>Ice Missile</item>
 				<item>Heal</item>
 				<item>Shield</item>
 				<item>Stone Curse</item>
@@ -14114,7 +14114,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Ice_Missile:99}</equipItem1>
 			<equipItem2></equipItem2>
@@ -14182,7 +14182,7 @@
 			<knownSpells>
 				<count>4</count>
 				<item_version>0</item_version>
-				<item>Blizzard</item>
+				<item>Poison Cloud</item>
 				<item>Heal</item>
 				<item>Shield</item>
 				<item>Stone Curse</item>
@@ -14190,7 +14190,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Wood Shaman Staff {castSpell=Ice_Missile:99}</equipItem1>
 			<equipItem2></equipItem2>
@@ -15571,7 +15571,7 @@
 			<knownSpells>
 				<count>4</count>
 				<item_version>0</item_version>
-				<item>Diamond Dust</item>
+				<item>Ice Missile</item>
 				<item>Drain Life</item>
 				<item>Shield</item>
 				<item>Stone Curse</item>
@@ -15579,7 +15579,7 @@
 			<skillFire>80</skillFire>
 			<skillWater>80</skillWater>
 			<skillAir>80</skillAir>
-			<skillEarth>80</skillEarth>
+			<skillEarth>150</skillEarth>
 			<skillAstral>80</skillAstral>
 			<equipItem1>Good Wood Staff {castSpell=Drain_Life:5}</equipItem1>
 			<equipItem2></equipItem2>
@@ -16876,7 +16876,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Sonic Beam</equipItem1>
 			<equipItem2></equipItem2>
@@ -16956,7 +16956,7 @@
 			<skillFire>100</skillFire>
 			<skillWater>100</skillWater>
 			<skillAir>100</skillAir>
-			<skillEarth>100</skillEarth>
+			<skillEarth>255</skillEarth>
 			<skillAstral>100</skillAstral>
 			<equipItem1>Sonic Beam</equipItem1>
 			<equipItem2></equipItem2>
@@ -45536,7 +45536,7 @@
 			<areaDuration>0</areaDuration>
 			<areaFrequency>0</areaFrequency>
 			<unitApplyMethod>2</unitApplyMethod>
-			<duration>10</duration>
+			<duration>48</duration>
 			<frequency>0</frequency>
 			<damageMin>-1</damageMin>
 			<damageMax>-1</damageMax>
