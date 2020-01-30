@@ -69,6 +69,11 @@ ret_bad:
 
 void __declspec(naked) CRASH_fix_523295()
 {
+//+fix for spell range calculating:
+// all spells use data.bin-spells-maxRange value (1 byte = base, 2 byte = divider)
+// range = 0, if base=0
+// range = base + spell_level / divider, if base <> 0
+// if divider = 0 in data.bin, default divider = 3 for teleport, 30 for other spells
 	__asm
 	{
 		push	4
@@ -77,16 +82,42 @@ void __declspec(naked) CRASH_fix_523295()
 		test	eax, eax
 		jz		ret_bad
 
-		mov		ecx, [ebp-0x0C]
-		mov		dl, [eax]
-		mov		[ecx+0x09], dl
-		mov		eax, [ebp-0x0C]
-		xor		ecx, ecx
-		mov		cl, [eax+0x08]
-		cmp		ecx, 0x17
+//		mov		ecx, [ebp-0x0C]
+//		mov		dl, [eax]
+//		mov		[ecx+0x09], dl
+//		mov		eax, [ebp-0x0C]
+//		xor		ecx, ecx
+//		mov		cl, [eax+0x08]
+//		cmp		ecx, 0x17
+//
+//		mov		edx, 0x005232A5
+//		jmp		edx
 
-		mov		edx, 0x005232A5
+		mov		ecx, [eax]
+		or		cl,cl
+		je		range_end // range = 0
+		mov		edx, [ebp-0x0C]
+		cmp		byte ptr [edx+0x08], 0x17
+		jne		spell_not_tp
+spell_tp:
+		mov		al, 3
+		jmp		spell_any
+spell_not_tp:
+		mov		al, 30
+spell_any:
+		or		ch,ch
+		jne		default_range
+		mov		ch,al
+default_range:
+		xor		eax,eax
+		mov		al, [ebp+0x08]
+		cwde
+		div		ch
+		add		cl,al
+range_end:
+		mov		edx, 0x005232EB
 		jmp		edx
+
 
 ret_bad:
 		mov		edx, 0x005234A3
