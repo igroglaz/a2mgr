@@ -335,11 +335,11 @@ C-S-W
 C-S
 C-S-E
 E-S-E
-S-E
-S-S-E
-S
-S-S-W
 S-W
+S-S-W
+S
+S-S-E
+S-E
 Quests:
 No quests
 Given
