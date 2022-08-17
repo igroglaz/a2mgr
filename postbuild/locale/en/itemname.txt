@@ -93,7 +93,7 @@ Elven Scroll with Spell Drain Life
 Elven Scroll with Spell Magic Shield
 Elven Scroll with Spell Curse
 Elven Scroll with Spell Slow
-Antipoison Potion
+Regeneration Potion
 Potion of Body
 Potion of Reaction
 Potion of Mind
@@ -455,7 +455,7 @@ Hard Leather Boots
 Dragon Leather Small Shield
 Dragon Leather Large Shield
 Elven Scaled Dragon Shield
-Sea Witch Ring
+Sea Witcher Ring
 Sea Witcher Amulet
 Dragon Leather Helm
 Sea Witcher Crown
@@ -468,16 +468,26 @@ Dragon Leather Gauntlets
 Sea Witcher Gloves
 Dragon Leather Boots
 Sea Witcher Magic Shoes
+Staff of Curse
 Black Widow Pike
+Staff of Fire Wall
 Flamer Pike
+Staff of Acid Stream
 Black Pearl Pike
+Staff of Blizzard
+Staff of Prismatic Spray
 Assassin's Crystal Halberd
+Staff of Fireball
 Valkyr Pike
+Staff of Poison Cloud
 Crimson Red Crystal Pike
 Black Widow Small Shield
+Daedra's Shield
 Flamer Small Shield
+Shield of Death
 Black Pearl Large Shield
 Valkyr Small Shield
+Paladin's Shield
 Crimson Red Crystal Large Shield
 Black Widow Ring
 Flamer Ring
@@ -494,11 +504,14 @@ Elf Amulet
 Valkyr Amulet
 Crimson Red Crystal Amulet
 Black Widow Helm
+Daedra's Helm
 Flamer Crown
+Helm of Death
 Black Pearl Chain Helm
 Vampic Crown
 Elf Brooch
 Valkyr Helm
+Paladin's Helm
 Crimson Red Crystal Helm
 Black Widow Mail
 Flamer Mail
@@ -508,11 +521,14 @@ Elf Dress
 Valkyr Mail
 Crimson Red Dragon Mail
 Black Widow Cuirass
+Daedra's Cuirass
 Flamer Cuirass
+Cuirass of Death
 Black Pearl Plate Cuirass
 Vampic Cloak
 Elf Wings
 Valkyr Cuirass
+Paladin's Cuirass
 Crimson Red Crystal Plate Cuirass
 Black Widow Plate Bracers
 Flamer Plate Bracers
@@ -546,12 +562,15 @@ BFG9000
 Crystal Shield Of Death
 Crystal Ring
 Neo Ring
+Aizen's Hogyoku Ring
 Crystal Amulet
 Neo Matrix
+Aizen's Hogyoku Amulet
 Crystal Chain Helm
 Crystal Full Helm
 Crystal Plate Helm
 Neo Glasses
+Aizen's Spectacles
 Crystal Scale Mail
 Neo Suit
 Crystal Sapphire Cuirass
@@ -580,9 +599,9 @@ Mage's Low Hat
 Mage's Hat
 Mage's Cap
 Mage's Low Hat
-Mage's Hat
-Mage's Cap
-Mage's Low Hat
+Elven Mage's Hat
+Elven Mage's Cap
+Elven Mage's Low Hat
 Skeleton Crown
 Mage's Robe
 Mage's Dress
@@ -591,7 +610,7 @@ Mage's Dress
 Mage's Robe
 Mage's Dress
 Mage's Dress
-Mage's Dress
+Elven Mage's Dress
 Old Robe
 Necromancers Dress
 Skeleton Dress
@@ -602,16 +621,16 @@ Mage's Cape
 Mage's Cloak
 Mage's Cape
 Mage's Cape
-Mage's Cape
+Elven Mage's Cape
 Necromancers Cloak
 Skeleton Cloak
 Mage's Gloves
 Mage's Gloves
 Mage's Gloves
 Mage's Gloves
-Mage's Gloves
+Elven Mage's Gloves
 Mage's Shoes
 Mage's Shoes
 Mage's Shoes
 Mage's Shoes
-Mage's Shoes
+Elven Mage's Shoes

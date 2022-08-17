@@ -93,7 +93,7 @@ Elven Scroll with Spell Drain Life
 Elven Scroll with Spell Magic Shield
 Elven Scroll with Spell Curse
 Elven Scroll with Spell Slow
-Antipoison Potion
+Regeneration Potion
 Potion of Body
 Potion of Reaction
 Potion of Mind
@@ -599,9 +599,9 @@ Mage's Low Hat
 Mage's Hat
 Mage's Cap
 Mage's Low Hat
-Mage's Hat
-Mage's Cap
-Mage's Low Hat
+Elven Mage's Hat
+Elven Mage's Cap
+Elven Mage's Low Hat
 Skeleton Crown
 Mage's Robe
 Mage's Dress
@@ -610,7 +610,7 @@ Mage's Dress
 Mage's Robe
 Mage's Dress
 Mage's Dress
-Mage's Dress
+Elven Mage's Dress
 Old Robe
 Necromancers Dress
 Skeleton Dress
@@ -621,16 +621,16 @@ Mage's Cape
 Mage's Cloak
 Mage's Cape
 Mage's Cape
-Mage's Cape
+Elven Mage's Cape
 Necromancers Cloak
 Skeleton Cloak
 Mage's Gloves
 Mage's Gloves
 Mage's Gloves
 Mage's Gloves
-Mage's Gloves
+Elven Mage's Gloves
 Mage's Shoes
 Mage's Shoes
 Mage's Shoes
 Mage's Shoes
-Mage's Shoes
+Elven Mage's Shoes

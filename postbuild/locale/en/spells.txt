@@ -12,7 +12,7 @@ Prismatic Spray (Multi-Target)#Inflicts Air damage to several targets at once
 Lightning (Homing)#Inflicts Air damage to a single target
 Ice Missile (Homing)#Inflicts Water damage to a single target
 Poison Cloud (Area)#Inflicts Water damage continuously to all caught in the area of effect, also poisoning them
-Blizzard (Area)#Inflicts Water damage continuously to all caught in the area of effect
+Blizzard (Area)#Inflicts Earth damage continuously to all caught in the area of effect
 Protection from Water (Homing)#Increases resistanse to Water magic, lowering damage and duration of Water effects
 Summon (Caster Only)#Summons a monster to defend the caster.
 Animated Dead (Corpse)#Raises zombie, skeleton, or ghost from a unit's corpse

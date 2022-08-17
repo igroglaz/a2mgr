@@ -1,5 +1,7 @@
 = Tangar's Hat =
 
+https://tangar.info/en/rom2
+
 Source files:
 https://github.com/igroglaz/a2mgr
 https://github.com/igroglaz/srvmgr

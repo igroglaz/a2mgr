@@ -1,5 +1,7 @@
 = Хэт Тангара =
 
+https://tangar.info/en/rom2
+
 Исходники:
 https://github.com/igroglaz/a2mgr
 https://github.com/igroglaz/srvmgr
