@@ -116,7 +116,7 @@ Connecting. Please wait...
 Autocasting is set to minimum
 Autocasting is set to average
 Autocasting is set to maximum
-Cthulhu fhtagn!
+Please choose another nickname. Only English characters allowed!
 <Hat URL must be here>
 Connect to web page
 Connect to Hat
