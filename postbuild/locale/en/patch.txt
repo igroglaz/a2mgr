@@ -12,8 +12,8 @@ Server Error 10
 Your character file not found. It may be deleted.
 Your previous character still present in the game. You can join another character in 5 minutes since leaving with previous one.
 Error downloading map.
-Your character is too strong for this map.
-Your character is too weak for this map.
+Your character is too weak or strong for this server. Try other server.
+Your character is too weak or strong for this server. Try other server.
 Вы играли на сервере, который потерял связь с хэтом. Если вы хотите играть старой версией персонажа, нажмите Да, иначе нажмите Нет и подождите, пока сервер восстановит связь с хэтом.
 Connection with Hat has been lost.
 Hat doesn't respond.

@@ -121,6 +121,8 @@ ggme_ret1:
     }
 }
 
+
+// disable check player skills - is he allowed to enter the server (it was 26-50-90 brackets by default)
 void __declspec(naked) GUI_softcoreEnter()
 {
     __asm
@@ -131,18 +133,25 @@ void __declspec(naked) GUI_softcoreEnter()
         mov     edx, [ebp-0x10]
         add     edx, 1
 
-        cmp     [z_softcore], 0
-        jnz     test_upper
+/*///////////////////////////////////
+// we comment this out - to allow to enter all servers without
+//  check on min-max skills (it's client UI block - greyish non-clickable line)
+
+        cmp     [z_softcore], 0 // z_softcore in vanilla mode is 0 .. if equal: ZF = 1
+        jnz     test_upper      // if not softcore - go test test
 
         cmp     [ecx+0x114], edx
         jg      test_failed
 
 test_upper:
+
         cmp     [ecx+0x118], edx
         jl      test_failed
 
         cmp     [ebp-0x14], 0x10
         jge     test_failed
+                                   //
+///////////////////////////////////*/
 
         mov     [ebp-0x40], 1
         mov     edx, 0x0044DD55
