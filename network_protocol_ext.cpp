@@ -720,7 +720,7 @@ struct ScreenshotInfo
 extern char aHat[];
 int Cl_ScreenshotThread(const ScreenshotInfo* si)
 {
-	SOCKET s = SOCK_Connect("hat.tangar.info", 8000, "0.0.0.0", 0);
+	SOCKET s = SOCK_Connect("hat.rom2.ru", 8000, "0.0.0.0", 0);
 
 	Packet p;
 	p.WriteUInt32(0x5C0EE250);
