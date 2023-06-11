@@ -237,6 +237,7 @@ void __declspec(naked) GUI_sandboxSwitch()
 		mov		edx, 0x00452B30
 		call	edx
 
+/*
 		push	0xD5 // softcore
 		mov		ecx, 0x0062BA40
 		mov		edx, 0x00479BA3
@@ -263,6 +264,7 @@ void __declspec(naked) GUI_sandboxSwitch()
 		mov		ecx, [ebp-0x10]
 		mov		edx, 0x00452B30
 		call	edx
+*/
 
 		mov		edx, 0x0044CBBB
 		jmp		edx
