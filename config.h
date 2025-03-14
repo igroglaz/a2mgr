@@ -54,6 +54,8 @@ extern std::string current_directory;
 
 extern int z_softcore;
 
+extern bool hotkey_debug;
+
 #define PROTO_VER 20
 
 void ParseConfig();
