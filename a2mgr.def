@@ -128,3 +128,14 @@ DBG_di3p256		@303
 DBG_decideState @304
 
 fix_StoneCurseDurationCalculation	@201 NONAME
+
+top_level_key               @210
+hotkey_handler              @211
+f_key_handler               @212
+mark_item_hotkey            @213
+mark_spell_hotkey           @214
+item_hotkey_find            @215
+item_hotkey_set             @216
+spell_hotkey_use            @217
+spell_hotkey_set_mouse      @218
+spell_hotkey_set_selected   @219

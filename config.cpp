@@ -49,6 +49,8 @@ unsigned char sha1_uuid[20];
 
 int z_softcore = 0;
 
+bool hotkey_debug = false;
+
 using namespace std;
 
 void ParseConfig2x(ifstream& f_temp)
@@ -205,6 +207,13 @@ void ParseConfig2x(ifstream& f_temp)
 			val |= (c_b & 0x1F);
 
 			r_grid_color = val;
+		}
+		else if (cmd[0] == "hotkey_debug") {
+			if (cmd.size() == 2) {
+				hotkey_debug = StrToBoolean(cmd[1]);
+			} else {
+				hotkey_debug = true;
+			}
 		}
 	}
 
