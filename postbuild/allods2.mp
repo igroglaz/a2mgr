@@ -125,3 +125,14 @@
 //0 304 4688CF
 
 1 201 5233E6 // : fix_StoneCurseDurationCalculation
+
+0 210 0048a0de // top_level_key
+0 211 0040c997 // hotkey_handler
+0 212 0040caff // f_key_handler
+0 213 004aac7c // mark_item_hotkey
+0 214 004cefba // mark_spell_hotkey
+0 215 004ab61a // item_hotkey_find
+0 216 004ab545 // item_hotkey_set
+0 217 004cf5df // spell_hotkey_use
+0 218 004cf4ee // spell_hotkey_set_mouse
+0 219 004cf562 // spell_hotkey_set_selected
