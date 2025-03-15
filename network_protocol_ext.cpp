@@ -306,13 +306,11 @@ std::string NETPROTO_hhGetBlockingReply(std::string method, std::string url, std
 	return prog.string;
 }
 
-#include <atlstr.h>
-
 struct VersionFileEntry
 {
-	VersionFileEntry(CString a, CString b) : name(a), checksum(b) {}
-	CString name;
-	CString checksum;
+	VersionFileEntry(std::string a, std::string b) : name(a), checksum(b) {}
+	std::string name;
+	std::string checksum;
 };
 
 struct VersionFile
@@ -440,7 +438,7 @@ int NETPROTO_updater(UpdaterInfo* updater)
 	VersionFile vf_remote;
 	vf_remote.LoadFromString(md5_remote);
 
-	std::vector<CString> files_to_delete;
+	std::vector<std::string> files_to_delete;
 	std::vector<VersionFileEntry> files_to_download;
 
 	for (size_t i = 0; i < vf_own.files.size(); i++)
@@ -508,7 +506,7 @@ int NETPROTO_updater(UpdaterInfo* updater)
 					if (files_to_download[i].checksum == "da39a3ee5e6b4b0d3255bfef95601890afd80709")
 					{
 						LockProgress();
-						oldfilenames.push_back(files_to_download[i].name.GetBuffer());
+						oldfilenames.push_back(files_to_download[i].name);
 						UnlockProgress();
 						vf_own.files.push_back(files_to_download[i]);
 						fclose(file_data);
@@ -595,7 +593,7 @@ int NETPROTO_updater(UpdaterInfo* updater)
 		// and deletion
 		for (size_t i = 0; i < files_to_delete.size(); i++)
 		{
-			DeleteFile(("data/"+files_to_delete[i]).GetBuffer());
+			DeleteFile(("data/"+files_to_delete[i]).c_str());
 			for (size_t j = 0; j < vf_own.files.size(); j++)
 			{
 				if (vf_own.files[j].name == files_to_delete[i])

@@ -1,6 +1,6 @@
 // Ported from ZAllods engine
 #pragma once
-#include "stdint.h"
+#include <cstdint>
 
 struct MapTile
 {

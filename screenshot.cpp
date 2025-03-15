@@ -4,6 +4,7 @@
 
 #include <cstring>
 #include <ctime>
+#include <cstdint>
 
 #include "utils.h"
 #include "debug.h"
@@ -49,7 +50,6 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 }
 
 #include "lib/lodepng.h"
-#include "lib/stdint.h"
 
 void SCREENSHOT_takeManual()
 {

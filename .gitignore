@@ -22,3 +22,8 @@ postbuild/final
 
 postbuild/log.txt
 postbuild/a2mgr.map
+
+
+build/
+CMakeCache/
+.vscode/
