@@ -4,7 +4,7 @@
 
 #include "config.h"
 #include "lib/serialize.hpp"
-#include "stdint.h"
+#include <cstdint>
 #include "utils.h"
 #include "zxmgr.h"
 

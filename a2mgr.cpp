@@ -1,4 +1,3 @@
-#define _WIN32_WINNT 0x500
 #include <windows.h>
 #include <psapi.h>
 #include "utils.h"
