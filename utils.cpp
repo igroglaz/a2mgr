@@ -3,14 +3,14 @@
 #include <cstdarg>
 #include <cstdio>
 
-using namespace std;
-
 #include <windows.h>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
 #include <string>
 #include <vector>
+
+using namespace std;
 
 ofstream _LOG_FILE;
 string   _LOG_NAME;
