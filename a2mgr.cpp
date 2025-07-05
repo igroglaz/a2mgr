@@ -4,6 +4,7 @@
 #include "debug.h"
 #include <cstring>
 #include <ctime>
+#include <filesystem>
 
 #include "a2mgr.h"
 
@@ -87,6 +88,21 @@ void TryInitSDL()
 		}
 		ReleaseMutex(SDLInitMutex);
 	}
+}
+
+void RemoveA2C() {
+    try {
+        int count;
+        for (const auto& entry : std::filesystem::directory_iterator(".")) {
+            if (entry.is_regular_file() && entry.path().extension() == ".a2c") {
+                std::filesystem::remove(entry.path());
+                ++count;
+            }
+        }
+        log_format("Deleted %d `.a2c` files\n", count);
+    } catch (const std::exception& e) {
+        log_format("Failed to delete `.a2c` files: %s\n", e.what());
+    }
 }
 
 bool _stdcall DllMain_Init(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
@@ -203,6 +219,8 @@ bool _stdcall DllMain_Init(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID l
 				Sleep(delay); // before we try to initialize video mode, etc. to not make the old allods be like wtf.
 		}
 	}
+
+	RemoveA2C();
 
 	return true;
 }
