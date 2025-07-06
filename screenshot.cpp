@@ -12,6 +12,7 @@
 #include "config.h"
 
 #include "zxmgr.h"
+#include "lib/lodepng.h"
 
 #pragma comment(lib, "gdiplus")
 
@@ -48,8 +49,6 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
    free(pImageCodecInfo);
    return -1;  // Failure
 }
-
-#include "lib/lodepng.h"
 
 void SCREENSHOT_takeManual()
 {

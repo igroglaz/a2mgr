@@ -12,9 +12,8 @@
 #include "language.h"
 #include "pack_scrolling.h"
 #include "CRC_32.h"
-
 #include "File.h"
-
+#include "lib/sha1.h"
 #include "network_protocol_ext.h"
 
 #include <SDL/SDL.h>
@@ -49,8 +48,6 @@ BOOL _stdcall BASE_setCurrentDirectory1(char* newd)
 
 	return SetCurrentDirectory(curdir.c_str());
 }
-
-#include "lib/sha1.h"
 
 string DumpSHA(unsigned char buf[])
 {

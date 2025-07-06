@@ -4,10 +4,11 @@
 
 #include <ctime>
 
+#include "Image.h"
+
 using namespace zxmgr;
 using namespace std;
 
-#include "Image.h"
 bool c_Visible = false;
 
 time_t start_time = time(NULL);

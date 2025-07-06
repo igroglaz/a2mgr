@@ -10,9 +10,9 @@
 
 #include "zxmgr.h"
 
-using namespace std;
-
 #include "a2mgr.h"
+
+using namespace std;
 
 typedef unsigned char u_char;
 

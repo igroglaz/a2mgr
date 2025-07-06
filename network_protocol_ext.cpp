@@ -10,6 +10,12 @@
 #include "a2mgr.h"
 #include "CRC_32.h"
 #include "lib/socket.hpp"
+#include "lib/lodepng.h"
+
+#include <direct.h>
+#include <windows.h>
+#include <windowsx.h>
+#include <gdiplus.h>
 
 //#define API_LOCAL
 
@@ -27,8 +33,6 @@ int _declspec(naked) real_4949CD()
 		jmp		edx
 	}
 }
-
-#include "lib\socket.hpp"
 
 int __declspec(naked) NETPROTO_showErrorDialog(const char* text, int msgtype = 0)
 {
@@ -347,8 +351,6 @@ bool NETPROTO_CreateRecursiveCheck(std::string wat)
 	return (dwAttrib != INVALID_FILE_ATTRIBUTES && 
            (dwAttrib & FILE_ATTRIBUTE_DIRECTORY));
 }
-
-#include <direct.h>
 
 bool NETPROTO_CreateRecursive(std::string wat)
 {
@@ -713,8 +715,6 @@ struct ScreenshotInfo
 	bool Flip;
 };
 
-#include "lib/lodepng.h"
-
 extern char aHat[];
 int Cl_ScreenshotThread(const ScreenshotInfo* si)
 {
@@ -837,9 +837,6 @@ int Cl_ScreenshotThread(const ScreenshotInfo* si)
 ScreenshotInfo* LastSI = NULL;
 void _stdcall ProcLastSI();
 
-#include <windows.h>
-#include <windowsx.h>
-#include <gdiplus.h>
 bool Cl_ProcessServerPacket(Packet& pack)
 {
 	uint8_t type = pack.ReadUInt8();
