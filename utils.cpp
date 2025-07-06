@@ -9,6 +9,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <fstream>
 
 using namespace std;
 
@@ -252,8 +253,6 @@ bool StrToBoolean(const string& what)
 		return true;
 	return false;
 }
-
-#include <fstream>
 
 /*
     utils::FileExists: проверка на существование файла.
