@@ -338,57 +338,6 @@ string TruncateSlashes(const string& filename)
     return ret;
 }
 
-/*
-    utils::CDirectory::Open: назначить папку, в которой будет производиться поиск.
-
-    Возвращает true при успешном открытии папки.
-
-    what: название папки.
-*/
-bool CDirectory::Open(const string& what)
-{
-    this->Close();
-    /*this->directory = opendir(what.c_str());
-    if(!this->directory) return false;*/
-    return true;
-}
-
-/*
-    utils::CDirectory::Read: прочитать следующий файл из папки.
-
-    Возвращаемое значение: true если прочитан, false в противном случае.
-
-    where: структура, куда будут помещены данные о файле.
-*/
-bool CDirectory::Read(CDirectoryEntry& where)
-{
-    /*if(!this->directory) return false;
-    struct dirent* dp = readdir(this->directory);
-    if(!dp) return false;
-    if(dp->d_name[0] == '.') return this->Read(where);
-    where.name.assign(dp->d_name);*/
-    return true;
-}
-
-/*
-    utils::CDirectory::Close: закрыть папку.
-*/
-void CDirectory::Close()
-{
-    //if(this->directory) closedir(this->directory);
-}
-
-// На всякий, собственно, пожарный
-CDirectory::~CDirectory()
-{
-    this->Close();
-}
-
-CDirectory::CDirectory()
-{
-    //this->directory = NULL;
-}
-
 unsigned long _stdcall _call_func(unsigned long addr, unsigned long countp, ...)
 {
 	unsigned long xebp;

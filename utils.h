@@ -42,25 +42,4 @@ unsigned long _call_virtual_func(unsigned long cptr, unsigned long offset, unsig
 unsigned long _get_this();
 #define _fst(count) __asm add esp, count
 
-// directory search
-struct CDirectoryEntry
-{
-    std::string name;
-};
-
-class CDirectory
-{
-public:
-    CDirectory();
-    ~CDirectory();
-
-    bool Open(const std::string& what);
-    bool Read(CDirectoryEntry& where);
-    void Close();
-
-protected:
-    //DIR* directory;
-};
-
-
 #endif // UTILS_H_INCLUDED
