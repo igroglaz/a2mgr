@@ -88,18 +88,25 @@ void TryInitSDL()
 }
 
 void RemoveA2C() {
-    try {
-        int count;
-        for (const auto& entry : std::filesystem::directory_iterator(".")) {
-            if (entry.is_regular_file() && entry.path().extension() == ".a2c") {
-                std::filesystem::remove(entry.path());
-                ++count;
-            }
-        }
-        log_format("Deleted %d `.a2c` files\n", count);
-    } catch (const std::exception& e) {
-        log_format("Failed to delete `.a2c` files: %s\n", e.what());
-    }
+	int count = 0;
+	WIN32_FIND_DATAA directory;
+	HANDLE find = FindFirstFileA("*.a2c", &directory);
+
+	if (find != INVALID_HANDLE_VALUE) {
+		do {
+			if (!(directory.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)) {
+				if (DeleteFileA(directory.cFileName)) {
+					++count;
+				} else {
+					log_format("Failed to delete %s\n", directory.cFileName);
+				}
+			}
+		} while (FindNextFileA(find, &directory));
+
+		FindClose(find);
+	}
+
+	log_format("Deleted %d `.a2c` files\n", count);
 }
 
 bool _stdcall DllMain_Init(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
