@@ -103,20 +103,26 @@ unsigned long setString(char* pthis)
 	return str_count;
 }
 
-unsigned long _stdcall consoleDown(char* pthis)
-{
-	if(!pthis) return 0;
+unsigned long _stdcall consoleDown(char* pthis) {
+	if (!pthis) {
+		return 0;
+	}
+
 	char* arrtptr = *(char**)(pthis+0x168);
-	if(!arrtptr) return 0;
+	if (!arrtptr) {
+		return 0;
+	}
 
 	char** cstr = (char**)(pthis+0x84);
-	if(!cstr) return 0;
+	if (!cstr) {
+		return 0;
+	}
 
-	if(__chat_history_index < __chat_history.size()-1)
-	{
+	if (__chat_history_index + 1 < __chat_history.size()) {
 		__chat_history_index++;
 		return setString(arrtptr);
 	}
+
 	return 0;
 }
 
