@@ -30,23 +30,23 @@
 0 30 0043E1FB // : CHAT_keyDown
 0 31 0048F167 // : CHAT_getMessageLast
 // 32 missing?..
-0 33 00414994 // : CRASH_fix_414994 // от K@M (хотя регулярно случается у всех)
-0 34 0042353A // : CRASH_fix_42353A // фикс слёта при отрицательном опыте
-0 35 00523295 // : CRASH_fix_523295 // фикс слёта при отрицательном опыте
-0 36 0046AD10 // : CRASH_fix_46AD10 // фикс maxhp=0, фикс hp>maxhp
+0 33 00414994 // : CRASH_fix_414994 // РѕС‚ K@M (С…РѕС‚СЏ СЂРµРіСѓР»СЏСЂРЅРѕ СЃР»СѓС‡Р°РµС‚СЃСЏ Сѓ РІСЃРµС…)
+0 34 0042353A // : CRASH_fix_42353A // С„РёРєСЃ СЃР»С‘С‚Р° РїСЂРё РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРј РѕРїС‹С‚Рµ
+0 35 00523295 // : CRASH_fix_523295 // С„РёРєСЃ СЃР»С‘С‚Р° РїСЂРё РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРј РѕРїС‹С‚Рµ
+0 36 0046AD10 // : CRASH_fix_46AD10 // С„РёРєСЃ maxhp=0, С„РёРєСЃ hp>maxhp
 0 37 00420450 // : CRASH_fix_420450 // from allods2.log
 //0 38 0045FC3B // : CRASH_fix_45FC3B // from allods2.log
 //0 39 00458CF9 // : CRASH_fix_458CF9 // from allods2.log
 //0 40 004657AD // : CRASH_fix_4657AD // from allods2.log
-//0 41 0046B685 // : CRASH_fix_46B685 // от \Under_Watrer/
-0 42 004BEE2D // : CRASH_fix_4BEE2D // shop_init из патча 11
+//0 41 0046B685 // : CRASH_fix_46B685 // РѕС‚ \Under_Watrer/
+0 42 004BEE2D // : CRASH_fix_4BEE2D // shop_init РёР· РїР°С‚С‡Р° 11
 0 43 0043F738 // : HATENT_url_text
 0 44 00494AE4 // : HATENT_url_connect
 0 45 00457973 // : SCREENSHOT_take
-//0 46 004AAB7E // : CRASH_fix_4AAB7E // слёт от вещей в паке с количеством 0
+//0 46 004AAB7E // : CRASH_fix_4AAB7E // СЃР»С‘С‚ РѕС‚ РІРµС‰РµР№ РІ РїР°РєРµ СЃ РєРѕР»РёС‡РµСЃС‚РІРѕРј 0
 0 47 0040AAF5 // : INFO_fps
 0 48 004867E6		// : RES_loadDirectories
-//0 49 004EB723		// : RES_loadException // никто не знает что это и на хуя нужно
+//0 49 004EB723		// : RES_loadException // РЅРёРєС‚Рѕ РЅРµ Р·РЅР°РµС‚ С‡С‚Рѕ СЌС‚Рѕ Рё Р·Р°С‡РµРј РЅСѓР¶РЅРѕ
 0 50 0043EDEB // : LANG_change_43EDEB
 0 51 00474F27 // : LANG_change_474F27
 0 52 00486C39 // : LANG_change_48626D
@@ -54,7 +54,7 @@
 0 54 0048CA55 // : LANG_change_48CA55
 0 55 00491CDF // : LANG_change_491CDF
 0 56 004939A2 // : LANG_change_4939A2
-0 57 0049C153 // : CRASH_fix_multiwindow_1 // слёт из-за удаления одним окном временных файлов другого
+0 57 0049C153 // : CRASH_fix_multiwindow_1 // СЃР»С‘С‚ РёР·-Р·Р° СѓРґР°Р»РµРЅРёСЏ РѕРґРЅРёРј РѕРєРЅРѕРј РІСЂРµРјРµРЅРЅС‹С… С„Р°Р№Р»РѕРІ РґСЂСѓРіРѕРіРѕ
 0 58 0049C661 // : CRASH_fix_multiwindow_2
 0 59 004B7B94 // : CRASH_fix_multiwindow_3
 0 60 0048723E // : CRASH_fix_multiwindow_4
@@ -136,3 +136,4 @@
 0 217 004cf5df // spell_hotkey_use
 0 218 004cf4ee // spell_hotkey_set_mouse
 0 219 004cf562 // spell_hotkey_set_selected
+0 220 004b6977 // panel_toggle

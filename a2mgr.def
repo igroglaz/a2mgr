@@ -139,3 +139,4 @@ item_hotkey_set             @216
 spell_hotkey_use            @217
 spell_hotkey_set_mouse      @218
 spell_hotkey_set_selected   @219
+panel_toggle                @220

@@ -35,9 +35,12 @@ auto A2DeserializeHotkey = (void (__thiscall *)(Hotkey* hotkey, char** buf))(0x0
 
 int8_t* key_handler_object = nullptr;
 int8_t* window_object = nullptr;
+int8_t* panel_object = nullptr;
 
 auto ctrl = (volatile int*)0x62c9a0;
 auto shift = (volatile int*)0x62c9a4;
+auto mouse_x = (volatile int*)0x60e6d0;
+auto mouse_y = (volatile int*)0x60e6d4;
 
 struct BasicInfo {
     uint32_t id1;
@@ -78,6 +81,12 @@ std::unordered_map<int, std::string> CreateLabels() {
     for (int key = VK_F1; key <= VK_F24; ++key) {
         result[key] = "F" + std::to_string(key - VK_F1 + 1);
     }
+
+    for (char key = 'A'; key <= 'Z'; ++key) {
+        result[key] = std::string(1, key);
+    }
+
+    // TODO: support numbers. When setting a number hotkey, we need to remove the mapping of a corresponding control group.
 
     return result;
 }
@@ -182,7 +191,7 @@ bool IsTyping() {
 }
 
 bool AllowedWhileTyping(int key) {
-    return VK_F1 <= key && key <= VK_F24 || key == VK_INSERT || key == VK_DELETE || key == VK_INSERT || key == VK_DELETE;
+    return VK_F1 <= key && key <= VK_F24 || key == VK_INSERT || key == VK_DELETE || key == VK_HOME || key == VK_END;
 }
 
 Hotkey* LookupHotkey(int key) {
@@ -218,23 +227,6 @@ bool HotkeysAvailable() {
     return game_state == 1 && some_object != 0;
 }
 
-bool IsHotkeyAction(int key) {
-    if (labels.count(key) == 0) {
-        return false;
-    }
-
-    if (!HotkeysAvailable()) {
-        return false;
-    }
-
-    if (*shift || *ctrl) {
-        return true;
-    }
-    
-    auto hotkey = LookupHotkey(key);
-    return hotkey && hotkey->kind != Hotkey::Kind::UNSET;
-}
-
 const char* Label(int key) {
     auto it = labels.find(key);
     if (it != labels.end()) {
@@ -243,18 +235,156 @@ const char* Label(int key) {
     return "";
 }
 
+bool SpellBookOpen() {
+    if (!panel_object) {
+        log_format("[spellbook_open] no panel object saved\n");
+        return false;
+    }
+
+    return *(panel_object + 0x6c);
+}
+
+bool MouseOverMagic() {
+    int8_t* mthis = *(int8_t**)(window_object + 0xec);
+    if (!mthis) {
+        log_format("[spellbook_mouse]: no mthis\n");
+        return false;
+    }
+
+    POINT cursor{*mouse_x, *mouse_y};
+
+    auto a2SpellNumber = (int (__thiscall *)(void* obj, POINT* point))(0x004cf150);
+    int spell_number = a2SpellNumber(mthis, &cursor);
+
+    if (hotkey_debug) {
+        log_format("[spellbook_mouse]: cursor at (%d, %d) -> spell number: %d\n", cursor.x, cursor.y, spell_number);
+    }
+
+    return spell_number >= 0;
+}
+
+bool SpellHighlighted() {
+    int8_t* mthis = *(int8_t**)(window_object + 0xec);
+    if (!mthis) {
+        log_format("[spellbook_highlight] no mthis\n");
+        return false;
+    }
+
+    return *(int32_t*)(mthis + 0x60) >= 0;
+}
+
+bool InventoryOpen() {
+    if (!panel_object) {
+        log_format("[inventory_open] no panel object saved\n");
+        return false;
+    }
+
+    return *(panel_object + 0x68);
+}
+
+bool MouseOverItem() {
+    int8_t* ithis = *(int8_t**)(window_object + 0xe8);
+    if (!ithis) {
+        log_format("[item_mouse] no ithis");
+        return false;
+    }
+    
+    RECT* rect = (RECT*)(ithis+8);
+
+    int x = *mouse_x;
+    int y = *mouse_y;
+
+    if (!PtInRect(rect, POINT{x, y})) {
+        return false;
+    }
+
+    auto a2ItemUnderCursor = (int (__thiscall *)(void* obj, int x, int y_neg))(0x4aad40);
+    int pos = a2ItemUnderCursor(ithis, x, -y);
+
+    if (hotkey_debug) {
+        log_format("[item_mouse]: cursor at (%d, %d) -> item: %d", x, y, pos);
+    }
+
+    return pos >= 0;
+}
+
+void __fastcall PanelToggle(int8_t* panel) {
+    if (panel_object == nullptr) {
+        if (hotkey_debug) {
+            log_format("[panel_toggle] remembering panel=0x%x\n", panel);
+        }
+        panel_object = panel;
+    } else if (panel_object != panel) {
+        if (hotkey_debug) {
+            log_format("[panel_toggle] unexpected different panel ptr: 0x%x\n", panel);
+        }
+        panel_object = panel;
+    }
+}
+
+// 004b6977
+void __declspec(naked) panel_toggle() {
+    __asm {
+        mov ecx, DWORD PTR [ebp-0x20]
+        call PanelToggle
+
+        // Original instruction is useless, skip it.
+        mov ecx, 0x004b697f
+        jmp ecx
+    }
+}
+
+bool ShouldHandle(int key) {
+    if (labels.count(key) == 0 || !HotkeysAvailable()) {
+        return false;
+    }
+
+    if (*shift || *ctrl) {
+        if (IsTyping() && !AllowedWhileTyping(key)) {
+            return false;
+        }
+
+        if ('0' <= key && key <= '9' || 'A' <= key && key <= 'Z') {
+            if (*ctrl) {
+                return SpellBookOpen() && (SpellHighlighted() || MouseOverMagic()) && key != 'A';
+            } else if (*shift) {
+                return InventoryOpen() && MouseOverItem();
+            } else {
+                return true;
+            }
+        }
+    } else {
+        auto hotkey = LookupHotkey(key);
+        if (hotkey && hotkey->kind != Hotkey::Kind::UNSET) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 uint32_t __fastcall HotkeyHandler(int8_t* obj, int key, int8_t* window) {
     if (key_handler_object == nullptr) {
+        if (hotkey_debug) {
+            log_format("[hotkey_handler] remembering handler=0x%x\n", obj);
+        }
         key_handler_object = obj;
     } else if (key_handler_object != obj) {
-        log_format("[hotkey_handler] unexpected different handler\n");
+        if (hotkey_debug) {
+            log_format("[hotkey_handler] unexpected different handler\n");
+        }
         key_handler_object = obj;
     }
 
     if (window_object == nullptr) {
+        if (hotkey_debug) {
+            log_format("[hotkey_handler] remembering window=0x%x\n", window);
+        }
         window_object = window;
     } else if (window_object != window) {
-        log_format("[hotkey_handler] unexpected different window ptr\n");
+        if (hotkey_debug) {
+            log_format("[hotkey_handler] unexpected different window ptr\n");
+        }
         window_object = window;
     }
 
@@ -265,7 +395,7 @@ uint32_t __fastcall HotkeyHandler(int8_t* obj, int key, int8_t* window) {
         log_format("[hotkey_handler] enter standard handler: obj=0x%x, key=0x%x;  win->0x41c=%d, this->0x80=%d, win->0xc0=%d\n", obj, key, game_state, some_object, is_typing);
     }
 
-    if (IsHotkeyAction(key)) {
+    if (ShouldHandle(key)) {
         if (hotkey_debug) {
             log_format("[hotkey_handler] jumping into the handler directly\n");
         }
@@ -300,6 +430,10 @@ void __declspec(naked) hotkey_handler() {
 void __fastcall FKeyHandler(int8_t* obj, int key, int8_t* window) {
     if (hotkey_debug) {
         log_format("[f_key_handler] obj=0x%x, key=0x%x, window=0x%x\n", obj, key, window);
+    }
+
+    if (!window_object) {
+        return;
     }
 
     Hotkey* hotkey = LookupHotkey(key);
@@ -366,7 +500,7 @@ uint32_t __fastcall TopLevelKey(char* address, int key) {
         log_format("[top_level_key] address=0x%x, key=0x%x\n", address, key);
     }
 
-    if (*(int*)(address + 0x460) == 0 && IsHotkeyAction(key)) {
+    if (*(int*)(address + 0x460) == 0 && ShouldHandle(key)) {
         if (hotkey_debug) {
             log_format("[top_level_key] jumping into the handler directly\n");
         }
@@ -408,7 +542,7 @@ void __fastcall MarkItemHotkey(int8_t* obj, int y, int x1, int bag_item_position
         Hotkey* hotkey = it->second.get();
         if (hotkey && hotkey->kind == Hotkey::Kind::ITEM) {
             if (A2IsItemMatches(hotkey, *item)) {
-               zxmgr::Font::DrawText(FONT2, x2 + x1 + 35 + bag_item_position * 80, y + 8, Label(it->first), FONT_ALIGN_LEFT, FONT_COLOR_WHITE, 1);
+                zxmgr::Font::DrawText(FONT2, x2 + x1 + 35 + bag_item_position * 80, y + 8, Label(it->first), FONT_ALIGN_LEFT, FONT_COLOR_WHITE, 1);
             }
         }
     }
