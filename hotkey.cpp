@@ -344,14 +344,12 @@ bool ShouldHandle(int key) {
             return false;
         }
 
-        if ('0' <= key && key <= '9' || 'A' <= key && key <= 'Z') {
-            if (*ctrl) {
-                return SpellBookOpen() && (SpellHighlighted() || MouseOverMagic()) && key != 'A';
-            } else if (*shift) {
-                return InventoryOpen() && MouseOverItem();
-            } else {
-                return true;
-            }
+        if (*ctrl) {
+            return SpellBookOpen() && (SpellHighlighted() || MouseOverMagic()) && key != 'A';
+        } else if (*shift) {
+            return InventoryOpen() && MouseOverItem();
+        } else {
+            return true;
         }
     } else {
         auto hotkey = LookupHotkey(key);
