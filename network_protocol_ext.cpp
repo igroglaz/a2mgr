@@ -685,9 +685,6 @@ int _stdcall NETPROTO_loginToHat()
     std::string login = *(const char**)(pthis + 0x3C0);
     std::string password = *(const char**)(pthis + 0x3C4);
 
-    char* uh;
-    __asm mov uh, offset aHat;
-
     CRC_32 crc;
     uint32_t crc32_allods2_exe = crc.CalcCRC(sha1_allods2_exe, 20);
     uint32_t crc32_a2mgr_dll = crc.CalcCRC(sha1_a2mgr_dll, 20);
@@ -715,7 +712,6 @@ struct ScreenshotInfo
     bool Flip;
 };
 
-extern char aHat[];
 int Cl_ScreenshotThread(const ScreenshotInfo* si)
 {
     SOCKET s = SOCK_Connect("hat.rom2.ru", 8000, "0.0.0.0", 0);
