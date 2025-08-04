@@ -51,7 +51,7 @@ class CArchive
         void LoadFromStream(std::istream& stream);
 
         void Reset();
-		void ResetPosition();
+        void ResetPosition();
 
     protected:
         uint32_t myPosRead;
