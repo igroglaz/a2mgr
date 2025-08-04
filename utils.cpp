@@ -19,77 +19,77 @@ string   _LOG_NAME;
 void _stdcall log_format(char *s, ...)
 /* вывод в файл лога */
 {
-	char line[1256], l2[1256];
-	va_list va;
-	va_start(va, s);
-	_vsnprintf(line, 1255, s, va);
-	va_end(va);
-	SYSTEMTIME tm;
-	OemToChar(line, line);
-	GetLocalTime(&tm);
-	sprintf(l2,"[%d.%.2d.%.4d %d:%.2d:%.2d] %s", tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond, /*tm.wMilliseconds, */line);
-	_LOG_FILE.open(_LOG_NAME.c_str(), ios::out | ios::app);
-	if(_LOG_FILE.is_open())
-	{
-		_LOG_FILE << l2;
-		_LOG_FILE.flush();
-		_LOG_FILE.close();
-	}
+    char line[1256], l2[1256];
+    va_list va;
+    va_start(va, s);
+    _vsnprintf(line, 1255, s, va);
+    va_end(va);
+    SYSTEMTIME tm;
+    OemToChar(line, line);
+    GetLocalTime(&tm);
+    sprintf(l2,"[%d.%.2d.%.4d %d:%.2d:%.2d] %s", tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond, /*tm.wMilliseconds, */line);
+    _LOG_FILE.open(_LOG_NAME.c_str(), ios::out | ios::app);
+    if(_LOG_FILE.is_open())
+    {
+        _LOG_FILE << l2;
+        _LOG_FILE.flush();
+        _LOG_FILE.close();
+    }
 }
 
 void _stdcall log_format2(char *s, ...)
 /* довывод в файл лога */
 {
-	char line[1256];
-	va_list va;
-	va_start(va, s);
-	_vsnprintf(line, 1255, s, va);
-	va_end(va);
-	OemToChar(line, line);
-	_LOG_FILE.open(_LOG_NAME.c_str(), ios::out | ios::app);
-	if(_LOG_FILE.is_open())
-	{
-		_LOG_FILE << line;
-		_LOG_FILE.flush();
-		_LOG_FILE.close();
-	}
+    char line[1256];
+    va_list va;
+    va_start(va, s);
+    _vsnprintf(line, 1255, s, va);
+    va_end(va);
+    OemToChar(line, line);
+    _LOG_FILE.open(_LOG_NAME.c_str(), ios::out | ios::app);
+    if(_LOG_FILE.is_open())
+    {
+        _LOG_FILE << line;
+        _LOG_FILE.flush();
+        _LOG_FILE.close();
+    }
 }
 
 vector<string> ParseCommandLine(string raw)
 {
-	for(size_t i = 0; i < raw.length(); i++)
-		if(raw[i] == '\t') raw[i] = ' ';
+    for(size_t i = 0; i < raw.length(); i++)
+        if(raw[i] == '\t') raw[i] = ' ';
 
-	vector<string> parameters;
-	parameters.push_back("");
-	bool encaps = false;
+    vector<string> parameters;
+    parameters.push_back("");
+    bool encaps = false;
     for (size_t i = 0; i < raw.size(); i++)
-	{
-		if (!encaps && !parameters.back().length() && IsWhitespace(raw[i]))
-			continue;
-		else if (raw[i] == '\\' && i+1 < raw.size())
-		{
-			parameters.back() += raw[i+1];
-			i++;
-		}
-		else if (raw[i] == '"')
-		{
-			encaps = !encaps;
-		}
-		else if (!encaps && IsWhitespace(raw[i]))
-		{
-			parameters.push_back("");
-		}
-		else
-		{
-			parameters.back() += raw[i];
-		}
-	}
+    {
+        if (!encaps && !parameters.back().length() && IsWhitespace(raw[i]))
+            continue;
+        else if (raw[i] == '\\' && i+1 < raw.size())
+        {
+            parameters.back() += raw[i+1];
+            i++;
+        }
+        else if (raw[i] == '"')
+        {
+            encaps = !encaps;
+        }
+        else if (!encaps && IsWhitespace(raw[i]))
+        {
+            parameters.push_back("");
+        }
+        else
+        {
+            parameters.back() += raw[i];
+        }
+    }
 
-	if (!parameters.back().length())
-		parameters.clear();
+    if (!parameters.back().length())
+        parameters.clear();
 
-	return parameters;
+    return parameters;
 }
 
 /*
@@ -227,31 +227,31 @@ string ToUpper(const string& what)
 
 unsigned long StrToInt(const string& what)
 {
-	unsigned long retval;
-	sscanf(what.c_str(), "%u", &retval);
-	return retval;
+    unsigned long retval;
+    sscanf(what.c_str(), "%u", &retval);
+    return retval;
 }
 
 double StrToFloat(const string& what)
 {
-	double retval;
-	sscanf(what.c_str(), "%f", &retval);
-	return retval;
+    double retval;
+    sscanf(what.c_str(), "%f", &retval);
+    return retval;
 }
 
 bool CheckInteger(const string& what)
 {
-	for(size_t i = 0; i < what.length(); i++)
-		if(what[i] < 0x30 || 0x39 < what[i]) return false;
-	return true;
+    for(size_t i = 0; i < what.length(); i++)
+        if(what[i] < 0x30 || 0x39 < what[i]) return false;
+    return true;
 }
 
 bool StrToBoolean(const string& what)
 {
-	string cr = Trim(ToLower(what));
-	if(cr == "yes" || cr == "true" || cr == "1" || cr == "y")
-		return true;
-	return false;
+    string cr = Trim(ToLower(what));
+    if(cr == "yes" || cr == "true" || cr == "1" || cr == "y")
+        return true;
+    return false;
 }
 
 /*
@@ -280,7 +280,7 @@ bool FileExists(const string& filename)
 string Basename(const string& filename)
 {
     //string ret = FixSlashes(filename);
-	string ret = filename;
+    string ret = filename;
     unsigned long where = ret.find_last_of("/\\");
     if(where == string::npos) return ret;
     ret.erase(0, where+1);
@@ -290,7 +290,7 @@ string Basename(const string& filename)
 string Dirname(const string& filename)
 {
     //string ret = FixSlashes(filename);
-	string ret = filename;
+    string ret = filename;
     unsigned long where = ret.find_last_of("/\\");
     if(where == string::npos) return ret;
     ret.erase(where);
@@ -340,77 +340,77 @@ string TruncateSlashes(const string& filename)
 
 unsigned long _stdcall _call_func(unsigned long addr, unsigned long countp, ...)
 {
-	unsigned long xebp;
-	__asm mov xebp, ebp;
-	xebp += 16; // ebp + 8 = first parameter, ebp + 12 = second parameter, ebp + 16 = all remaining
-	for(unsigned long i = 0; i < countp; i++)
-	{
-		__asm
-		{
-			mov		eax, [xebp]
-			push	[eax]
-		}
-		xebp += 4;
-	}
-	__asm
-	{
-		mov		edx, [addr]
-		call	edx
-	}
+    unsigned long xebp;
+    __asm mov xebp, ebp;
+    xebp += 16; // ebp + 8 = first parameter, ebp + 12 = second parameter, ebp + 16 = all remaining
+    for(unsigned long i = 0; i < countp; i++)
+    {
+        __asm
+        {
+            mov		eax, [xebp]
+            push	[eax]
+        }
+        xebp += 4;
+    }
+    __asm
+    {
+        mov		edx, [addr]
+        call	edx
+    }
 }
 
 unsigned long _stdcall _call_member_func(unsigned long addr, unsigned long cptr, unsigned long countp, ...)
 {
-	unsigned long xebp;
-	__asm mov xebp, ebp;
-	xebp += 24; // ebp + 8 = first parameter, ebp + 12 = second parameter, ebp + 16 = third parameter,
-				// ebp + 24 = all remaining
-	for(unsigned long i = 0; i < countp; i++)
-	{
-		__asm
-		{
-			mov		eax, [xebp]
-			push	[eax]
-		}
-		xebp += 4;
-	}
-	__asm
-	{
-		mov		ecx, [cptr]
-		mov		edx, [addr]
-		call	edx
-	}
+    unsigned long xebp;
+    __asm mov xebp, ebp;
+    xebp += 24; // ebp + 8 = first parameter, ebp + 12 = second parameter, ebp + 16 = third parameter,
+                // ebp + 24 = all remaining
+    for(unsigned long i = 0; i < countp; i++)
+    {
+        __asm
+        {
+            mov		eax, [xebp]
+            push	[eax]
+        }
+        xebp += 4;
+    }
+    __asm
+    {
+        mov		ecx, [cptr]
+        mov		edx, [addr]
+        call	edx
+    }
 }
 
 unsigned long _stdcall _call_virtual_func(unsigned long cptr, unsigned long xoffset, unsigned long countp, ...)
 {
-	unsigned long xebp;
-	__asm mov xebp, ebp;
-	xebp += 24; // ebp + 8 = first parameter, ebp + 12 = second parameter, ebp + 16 = third parameter,
-				// ebp + 24 = all remaining
-	for(unsigned long i = 0; i < countp; i++)
-	{
-		__asm
-		{
-			mov		eax, [xebp]
-			push	[eax]
-		}
-		xebp += 4;
-	}
-	__asm
-	{
-		mov		ecx, [cptr]
-		mov		edx, [ecx]
-		mov		eax, [xoffset]
-		call	[edx+eax]
-	}
+    unsigned long xebp;
+    __asm mov xebp, ebp;
+    xebp += 24; // ebp + 8 = first parameter, ebp + 12 = second parameter, ebp + 16 = third parameter,
+                // ebp + 24 = all remaining
+    for(unsigned long i = 0; i < countp; i++)
+    {
+        __asm
+        {
+            mov		eax, [xebp]
+            push	[eax]
+        }
+        xebp += 4;
+    }
+    __asm
+    {
+        mov		ecx, [cptr]
+        mov		edx, [ecx]
+        mov		eax, [xoffset]
+        call	[edx+eax]
+    }
 }
 
 unsigned long __declspec(naked) _get_this()
 {
-	__asm
-	{
-		mov		eax, ecx
-		retn
-	}
+    __asm
+    {
+        mov		eax, ecx
+        retn
+    }
 }

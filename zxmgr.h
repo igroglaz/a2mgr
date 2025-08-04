@@ -23,43 +23,43 @@
 
 namespace zxmgr
 {
-	unsigned long AfxGetMainWnd();
+    unsigned long AfxGetMainWnd();
 
-	namespace GUI
-	{
-		unsigned long _stdcall GetWindowLong(unsigned long cptr, unsigned long which);
-		void _stdcall RepaintWindow(unsigned long cptr);
-		void _stdcall RepaintWindowIndirect(unsigned long cptr);
-		void GetClientRect(unsigned long cptr, RECT* rec);
-	}
+    namespace GUI
+    {
+        unsigned long _stdcall GetWindowLong(unsigned long cptr, unsigned long which);
+        void _stdcall RepaintWindow(unsigned long cptr);
+        void _stdcall RepaintWindowIndirect(unsigned long cptr);
+        void GetClientRect(unsigned long cptr, RECT* rec);
+    }
 
-	namespace Font
-	{
-		unsigned long GetColor(unsigned long t);
-		void DrawText(unsigned long cptr, int x, int y, const char* string, unsigned long align, unsigned long color, unsigned long shadowpos);
-		unsigned long MeasureTextWidth(unsigned long cptr, const char* string);
-	}
+    namespace Font
+    {
+        unsigned long GetColor(unsigned long t);
+        void DrawText(unsigned long cptr, int x, int y, const char* string, unsigned long align, unsigned long color, unsigned long shadowpos);
+        unsigned long MeasureTextWidth(unsigned long cptr, const char* string);
+    }
 
-	void FillRect(int left, int top, int right, int bottom, unsigned long color);
-	void UpdateScreen();
-	void LockBuffer();
-	void UnlockBuffer();
+    void FillRect(int left, int top, int right, int bottom, unsigned long color);
+    void UpdateScreen();
+    void LockBuffer();
+    void UnlockBuffer();
 
-	char* GetPatchString(unsigned long idx);
+    char* GetPatchString(unsigned long idx);
 
-	void WriteChatRaw(const char*);
-	void WriteChat(const char*, ...);
-	void WriteChatA(const char*, ...);
+    void WriteChatRaw(const char*);
+    void WriteChat(const char*, ...);
+    void WriteChatA(const char*, ...);
 
-	int GlobalReceive();
-	void DisplayMouse();
+    int GlobalReceive();
+    void DisplayMouse();
 
-	void DoMessageLoop();
+    void DoMessageLoop();
 
-	HWND GetHWND();
+    HWND GetHWND();
 
-	void LockHighSurface();
-	void UnlockHighSurface();
+    void LockHighSurface();
+    void UnlockHighSurface();
 
-	void AfxAbort();
+    void AfxAbort();
 }

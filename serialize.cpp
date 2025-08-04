@@ -277,5 +277,5 @@ void CArchive::Reset()
 
 void CArchive::ResetPosition()
 {
-	myPosRead = 0;
+    myPosRead = 0;
 }
