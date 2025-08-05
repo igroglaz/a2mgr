@@ -334,13 +334,14 @@ void sha1( const unsigned char *input, size_t ilen, unsigned char output[20] )
 #include <stdio.h>
 int sha1_file( const char *path, unsigned char output[20] )
 {
-    FILE *f;
+    FILE *f = nullptr;
     size_t n;
     sha1_context ctx;
     unsigned char buf[1024];
 
-    if( ( f = fopen( path, "rb" ) ) == NULL )
-        return( POLARSSL_ERR_SHA1_FILE_IO_ERROR );
+    if (fopen_s(&f, path, "rb") != 0) {
+        return POLARSSL_ERR_SHA1_FILE_IO_ERROR;
+    }
 
     sha1_starts( &ctx );
 

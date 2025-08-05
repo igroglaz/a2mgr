@@ -130,10 +130,10 @@ void P_DisplayTile(uint16_t tile, int32_t x1, int32_t y1, int32_t x2, int32_t y2
 	if(!RenderBoundsReady)
 	{
 		RECT* rcSrc = (RECT*)(0x00625768);
-		RenderBounds.x = rcSrc->left;
-		RenderBounds.y = rcSrc->top;
-		RenderBounds.w = rcSrc->right-rcSrc->left;
-		RenderBounds.h = rcSrc->bottom-rcSrc->top;
+		RenderBounds.x = (int16_t)rcSrc->left;
+		RenderBounds.y = (int16_t)rcSrc->top;
+		RenderBounds.w = (int16_t)(rcSrc->right - rcSrc->left);
+		RenderBounds.h = (int16_t)(rcSrc->bottom - rcSrc->top);
 
 		RenderBoundsReady = true;
 	}
@@ -165,9 +165,9 @@ void P_DisplayTile(uint16_t tile, int32_t x1, int32_t y1, int32_t x2, int32_t y2
 
     for(uint32_t i = 1; i < 31; i++)
     {
-        float cnf = (float)i / 32.0;
-        top_y[i] = top_y[0] + (top_y[31] - top_y[0]) * cnf;
-        bottom_y[i] = bottom_y[0] + (bottom_y[31] - bottom_y[0]) * cnf;
+        double cnf = (double)i / 32.0;
+        top_y[i] = top_y[0] + (int32_t)((top_y[31] - top_y[0]) * cnf);
+        bottom_y[i] = bottom_y[0] + (int32_t)((bottom_y[31] - bottom_y[0]) * cnf);
     }
 
     uint16_t* pixels = Tiles[tile_dc][tile_i].Pixels;
@@ -179,9 +179,9 @@ void P_DisplayTile(uint16_t tile, int32_t x1, int32_t y1, int32_t x2, int32_t y2
         if(bottom_y[x] <= top_y[x]) continue;
         int32_t screenX = x1 + x;
         uint32_t h = bottom_y[x] - top_y[x];
-        float cfh = 32.0 / (float)h;
+        double cfh = 32.0 / (double)h;
         int32_t screenY = top_y[x];
-        float inY = 0.0;
+        double inY = 0.0;
         if(screenX < RenderBounds.x) continue;
         if(screenX >= RenderBounds.x + RenderBounds.w) continue;
         for(uint32_t y = 0; y < h; y++)
@@ -207,6 +207,8 @@ void _stdcall P_LoadTilesNative(uint32_t flags)
 	else P_LoadTiles();
 }
 
+#pragma warning(push)
+#pragma warning(disable : 4733)
 void __declspec(naked) TILES_loadTiles()
 {
 	__asm
@@ -225,6 +227,7 @@ void __declspec(naked) TILES_loadTiles()
 		jmp		edx
 	}
 }
+#pragma warning(pop)
 
 void _stdcall P_DisplayTileNative(uint16_t tile, int32_t x1, int32_t x2, int32_t h1, int32_t h2, int32_t h3, int32_t h4, uint32_t unk1, uint32_t unk2, uint32_t unk3, uint32_t unk4)
 {

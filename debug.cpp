@@ -75,7 +75,7 @@ DWORD exc_handler_run(struct _EXCEPTION_POINTERS *info)
 		log_format("a2mgr crashed.\n\n");
 		
 		//if(_LOG_FILE.is_open()) _LOG_FILE.close();
-		TerminateProcess(GetCurrentProcess(), 1); // гарантированно ёбнет
+		TerminateProcess(GetCurrentProcess(), 1); // РіР°СЂР°РЅС‚РёСЂРѕРІР°РЅРЅРѕ Р±Р°С…РЅРµС‚
 	}
 	__except(EXCEPTION_EXECUTE_HANDLER)
 	{
@@ -235,6 +235,8 @@ void _stdcall _load256(const char* name, const char* pthis)
 	Names[pthis] = name;
 }
 
+#pragma warning(push)
+#pragma warning(disable : 4733)
 // 426DA9
 void __declspec(naked) DBG_load256()
 {
@@ -257,6 +259,7 @@ void __declspec(naked) DBG_load256()
 		jmp		edx
 	}
 }
+#pragma warning(pop)
 
 void _stdcall _disp256(const char* pthis, unsigned long retaddr)
 {

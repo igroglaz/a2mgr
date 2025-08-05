@@ -4,7 +4,6 @@
 #include "debug.h"
 #include <cstring>
 #include <ctime>
-#include <filesystem>
 
 #include "a2mgr.h"
 
@@ -119,9 +118,12 @@ bool _stdcall DllMain_Init(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID l
     if(z_logsdir)
     {
         time_t t = time(NULL);
-        struct tm *tm = localtime(&t);
-        if(tm) wherelog = Format("logs\\allods2_%02u-%02u-%04u", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900);
-        else wherelog = "logs\\allods2";
+        struct tm tm;
+        if (localtime_s(&tm, &t) == 0) {
+            wherelog = Format("logs\\allods2_%02u-%02u-%04u", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900);
+        } else {
+            wherelog = "logs\\allods2";
+        }
     }
 
     u_pid = GetProcessId(GetCurrentProcess());
@@ -172,11 +174,11 @@ bool _stdcall DllMain_Init(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID l
 
     u_pid_string = new char[128];
     u_pid_string[127] = 0;
-    _snprintf(u_pid_string, 127, "allods-%u-%%u.$$$", u_pid);
+    sprintf_s(u_pid_string, 127, "allods-%u-%%u.$$$", u_pid);
 
     u_pid_string_delete = new char[128];
     u_pid_string_delete[127] = 0;
-    _snprintf(u_pid_string_delete, 127, "%%sallods-%u-*.$$$", u_pid);
+    sprintf_s(u_pid_string_delete, 127, "%%sallods-%u-*.$$$", u_pid);
 
     DecideLanguage();
 

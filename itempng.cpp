@@ -70,10 +70,10 @@ void _stdcall IImage_Display(int arg1, int arg2, int arg3, int arg4, int arg5)
 
 		if(src_a != 255)
 		{
-			float alpha = (float)(src_a) / 255.0;
-			float Fout_r = (src_r * alpha) + (dst_r * (1.0-alpha));
-			float Fout_g = (src_g * alpha) + (dst_g * (1.0-alpha));
-			float Fout_b = (src_b * alpha) + (dst_b * (1.0-alpha));
+			double alpha = (double)(src_a) / 255.0;
+			double Fout_r = (src_r * alpha) + (dst_r * (1.0-alpha));
+			double Fout_g = (src_g * alpha) + (dst_g * (1.0-alpha));
+			double Fout_b = (src_b * alpha) + (dst_b * (1.0-alpha));
 
 			out_r = max(min((uint8_t)Fout_r, 0x1F), 1);
 			out_g = max(min((uint8_t)Fout_g, 0x3F), 1);

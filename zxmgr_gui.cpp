@@ -64,11 +64,12 @@ namespace zxmgr
         {
             char aNoData[] = "";
             unsigned long pthis = (unsigned long)this;
-            __asm
-            {
-                push	aNoData // sub-header
+            __asm {
+                lea     ecx, aNoData  // sub-header
+                push    ecx
                 push	1
-                push	aNoData // header
+                lea     ecx, aNoData  // header
+                push    ecx
                 push	[unkint2]
                 push	[bottom]
                 push	[right]

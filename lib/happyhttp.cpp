@@ -38,6 +38,7 @@
 
 #ifdef WIN32
 	#include <winsock2.h>
+	#include <ws2tcpip.h>
 	#define vsnprintf _vsnprintf
 #endif
 
@@ -181,19 +182,27 @@ bool datawaiting( int sock )
 // returns 0 if bad
 struct in_addr *atoaddr( const char* address)
 {
-	struct hostent *host;
-	static struct in_addr saddr;
+    static struct in_addr saddr;
 
-	// First try nnn.nnn.nnn.nnn form
-	saddr.s_addr = inet_addr(address);
-	if (saddr.s_addr != -1)
-		return &saddr;
+    // Try numeric IP first (e.g., "192.168.0.1")
+    if (inet_pton(AF_INET, address, &saddr) == 1) {
+        return &saddr;
+    }
 
-	host = gethostbyname(address);
-	if( host )
-		return (struct in_addr *) *host->h_addr_list;
+    // Fallback to DNS resolution
+    struct addrinfo hints = {}, *result = nullptr;
+    hints.ai_family = AF_INET;  // Only IPv4
 
-	return 0;
+    int err = getaddrinfo(address, nullptr, &hints, &result);
+    if (err != 0 || !result) {
+        return nullptr;
+    }
+
+    struct sockaddr_in* ipv4 = (struct sockaddr_in*)result->ai_addr;
+    saddr = ipv4->sin_addr;
+
+    freeaddrinfo(result);
+    return &saddr;
 }
 
 
@@ -213,7 +222,7 @@ Wobbly::Wobbly( const char* fmt, ... )
 {
 	va_list ap;
 	va_start( ap,fmt);
-	int n = vsnprintf( m_Message, MAXLEN, fmt, ap );
+	int n = vsnprintf_s( m_Message, MAXLEN, fmt, ap );
 	va_end( ap );
 	if(n==MAXLEN)
 		m_Message[MAXLEN-1] = '\0';
@@ -364,7 +373,8 @@ void Connection::putrequest( const char* method, const char* url )
 	m_State = REQ_STARTED;
 
 	char req[ 512 ];
-	sprintf( req, "%s %s HTTP/1.1", method, url );
+	sprintf_s(req, sizeof(req), "%s %s HTTP/1.1", method, url);
+
 	m_Buffer.push_back( req );
 
 	putheader( "Host", m_Host.c_str() );	// required for HTTP1.1
@@ -388,7 +398,7 @@ void Connection::putheader( const char* header, const char* value )
 void Connection::putheader( const char* header, int numericvalue )
 {
 	char buf[32];
-	sprintf( buf, "%d", numericvalue );
+	sprintf_s( buf, sizeof(buf), "%d", numericvalue );
 	putheader( header, buf );
 }
 
@@ -937,5 +947,3 @@ bool Response::CheckClose()
 
 
 }	// end namespace happyhttp
-
-

@@ -25,11 +25,11 @@ unsigned long _stdcall GUI_textField_MeasurePosition(unsigned long x)
 
     if (*(unsigned long*)(pthis+0x7C)) // password field
     {
-        for (int i = 0; i < strlen(ctx); i++)
+        for (size_t i = 0; i < strlen(ctx); i++)
             ctx[i] = '*';
     }
 
-    for (int i = 0; i < strlen(ctx); i++)
+    for (size_t i = 0; i < strlen(ctx); i++)
     {
         tx += ctx[i];
         int wd = Font::MeasureTextWidth(*(unsigned long*)(pthis+0x60), tx.c_str());
@@ -86,6 +86,8 @@ unsigned long OnGMEnter(unsigned long pthis, unsigned long arg0)
     return 0;
 }
 
+#pragma warning(push)
+#pragma warning(disable : 4733)
 void __declspec(naked) GUI_gmEnter()
 { // 44DB8D
     __asm
@@ -120,7 +122,7 @@ ggme_ret1:
         
     }
 }
-
+#pragma warning(pop)
 
 // disable check player skills - is he allowed to enter the server (it was 26-50-90 brackets by default)
 void __declspec(naked) GUI_softcoreEnter()
@@ -157,7 +159,6 @@ test_upper:
         mov     edx, 0x0044DD55
         jmp     edx
 
-test_failed:
         mov     edx, 0x0044DD4E
         jmp     edx
     }

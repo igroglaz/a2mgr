@@ -108,21 +108,25 @@ void SCREENSHOT_takeManual()
     // buf and size is the screenshot
     string str = "screenshot";
     time_t t = time(NULL);
-    struct tm *tm = localtime(&t);
-    if(tm)
-    {
-        str = Format("screenshot_%02u-%02u-%04u_%02u-%02u-%02u", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
-        if(z_screendir) str = "screenshots\\" + str;
+    struct tm tm;
+    if (localtime_s(&tm, &t) == 0) {
+        str = Format("screenshot_%02u-%02u-%04u_%02u-%02u-%02u", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    }
+
+    if (z_screendir) {
+        str = "screenshots\\" + str;
     }
 
     str += ".png";
 
-    FILE* outf = fopen(str.c_str(), "wb");
-    fwrite(buf, size, 1, outf);
-    fclose(outf);
+    FILE* outf = nullptr;
+    if (fopen_s(&outf, str.c_str(), "wb") == 0) {
+        fwrite(buf, size, 1, outf);
+        fclose(outf);
 
-    char* strc = zxmgr::GetPatchString(226);
-    zxmgr::WriteChat(strc, str.c_str());
+        char* strc = zxmgr::GetPatchString(226);
+        zxmgr::WriteChat(strc, str.c_str());
+    }
 }
 
 void SCREENSHOT_take()
@@ -154,16 +158,19 @@ void SCREENSHOT_take()
     memset(fname, 0, 256*sizeof(WCHAR));
     string str = "screenshot";
     time_t t = time(NULL);
-    struct tm *tm = localtime(&t);
-    if(tm)
-    {
-        str = Format("screenshot_%02u-%02u-%04u_%02u-%02u-%02u", tm->tm_mday, tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour, tm->tm_min, tm->tm_sec);
-        if(z_screendir) str = "screenshots\\" + str;
+    struct tm tm;
+    if (localtime_s(&tm, &t) == 0) {
+        str = Format("screenshot_%02u-%02u-%04u_%02u-%02u-%02u", tm.tm_mday, tm.tm_mon + 1, tm.tm_year + 1900, tm.tm_hour, tm.tm_min, tm.tm_sec);
+    }
+    
+    if(z_screendir) {
+        str = "screenshots\\" + str;
     }
 
     str += "." + strtype;
 
-    mbstowcs(fname, str.c_str(), str.length());
+    size_t converted = 0;
+    mbstowcs_s(&converted, fname, sizeof(fname) / sizeof(fname[0]), str.c_str(), _TRUNCATE);
 
     using namespace Gdiplus;
     GdiplusStartupInput gdiplusStartupInput;

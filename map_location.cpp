@@ -1,4 +1,4 @@
-/// 团 妊衔塑怯乓堰 奈 擞棕日 滦盘ㄍ. 盐卵盘.
+/// 袧袝 袠小袩袨袥鞋袟校袝孝小携 袛袨 袥校效楔袠啸 袙袪袝袦衼袧. 小袨袙小袝袦.
 
 #include <windows.h>
 #include <string>
@@ -12,7 +12,7 @@ const char* _stdcall get_map_name(const char* oldfile)
 {
 	string cnewfile = ("maps\\"+string(oldfile));
 	memset(mapFileName, 0, 256);
-	strncpy(mapFileName, cnewfile.c_str(), 255);
+	strncpy_s(mapFileName, cnewfile.c_str(), 255);
 
 	return mapFileName;
 }

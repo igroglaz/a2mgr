@@ -190,7 +190,7 @@ void NETPROTO_hhReadReply(const happyhttp::Response* r, void* userdata, const un
 
         if (progress->dlnow == progress->dltotal)
         {
-            fwrite(progress->string.data(), progress->dltotal, 1, progress->file);
+            fwrite(progress->string.data(), (size_t)progress->dltotal, 1, progress->file);
             progress->string = "";
         }
 
@@ -217,7 +217,7 @@ void NETPROTO_hhReadReply(const happyhttp::Response* r, void* userdata, const un
             }
         }
 
-        uint32_t complete = progress->dltotal ? (progress->dlnow * 100.0 / progress->dltotal) : 100;
+        uint32_t complete = progress->dltotal ? (uint32_t)((progress->dlnow * 100.0 / progress->dltotal)) : 100;
 
         if (progress->filename != "")
         {
@@ -299,7 +299,7 @@ std::string NETPROTO_hhGetBlockingReply(std::string method, std::string url, std
 
         hhC.close();
     }
-    catch (happyhttp::Wobbly ex)
+    catch (happyhttp::Wobbly)
     {
         /* pass */
         return "";
@@ -385,8 +385,8 @@ int NETPROTO_updater(UpdaterInfo* updater)
     // first off make sure that we want to do anything even relatively long
     std::string id_own;
     std::string id_remote = NETPROTO_hhGetBlockingReply("GET", "/allods/version_id", "");
-    FILE* vfo = fopen("data/version_id", "rb");
-    if (vfo)
+    FILE* vfo = nullptr;
+    if (fopen_s(&vfo, "data/version_id", "rb") == 0)
     {
         fseek(vfo, 0, SEEK_END);
         size_t len = ftell(vfo);
@@ -411,9 +411,7 @@ int NETPROTO_updater(UpdaterInfo* updater)
     //data/version = own
     //allods/version http = remote
 
-    vfo = fopen("data/version", "rb");
-    if (vfo)
-    {
+    if (fopen_s(&vfo, "data/version", "rb") == 0) {
         fseek(vfo, 0, SEEK_END);
         size_t len = ftell(vfo);
         char* tmpbuf = new char[len+1];
@@ -500,11 +498,10 @@ int NETPROTO_updater(UpdaterInfo* updater)
             std::string target_dir = Dirname(target);
             if (NETPROTO_CreateRecursive(target_dir))
             {
-                FILE* file_data = fopen(target.c_str(), "wb");
+                FILE* file_data = nullptr;
 
                 // fast check for null hash, to avoid random happyhttp error
-                if (file_data)
-                {
+                if (fopen_s(&file_data, target.c_str(), "wb") == 0) {
                     if (files_to_download[i].checksum == "da39a3ee5e6b4b0d3255bfef95601890afd80709")
                     {
                         LockProgress();
@@ -553,7 +550,7 @@ int NETPROTO_updater(UpdaterInfo* updater)
 
                         hhC.close();
                     }
-                    catch (happyhttp::Wobbly ex)
+                    catch (happyhttp::Wobbly)
                     {
                         error = true;
                     }
@@ -577,9 +574,8 @@ int NETPROTO_updater(UpdaterInfo* updater)
                 }
             }
 
-            FILE* file_ver = fopen("data/version", "wb");
-            if (file_ver)
-            {
+            FILE* file_ver = nullptr;
+            if (fopen_s(&file_ver, "data/version", "wb") == 0) {
                 md5_own = vf_own.SaveToString();
                 fwrite(md5_own.data(), md5_own.size(), 1, file_ver);
                 fclose(file_ver);
@@ -606,20 +602,16 @@ int NETPROTO_updater(UpdaterInfo* updater)
             }
         }
         
-        FILE* file_ver = fopen("data/version", "wb");
-        if (file_ver)
-        {
+        FILE* file_ver = nullptr;
+        if (fopen_s(&file_ver, "data/version", "wb") == 0) {
             md5_own = vf_own.SaveToString();
             fwrite(md5_own.data(), md5_own.size(), 1, file_ver);
             fclose(file_ver);
         }
     }
 
-    if (id_remote.size())
-    {
-        vfo = fopen("data/version_id", "w");
-        if (vfo)
-        {
+    if (id_remote.size()) {
+        if (fopen_s(&vfo, "data/version_id", "w") == 0) {
             fwrite(id_remote.data(), id_remote.size(), 1, vfo);
             fclose(vfo);
         }
@@ -787,8 +779,7 @@ int Cl_ScreenshotThread(const ScreenshotInfo* si)
     hhC.putheader("Accept", "text/plain");
     hhC.endheaders();
 
-    try
-    {
+    try {
         //hhC.send((const unsigned char*)post_data.data(), post_data.size());
         hhC.send((unsigned const char*)pre.data(), pre.size());
         hhC.send(buf, size);
@@ -797,9 +788,7 @@ int Cl_ScreenshotThread(const ScreenshotInfo* si)
 
         while(hhC.outstanding())
             hhC.pump();
-    }
-    catch( happyhttp::Wobbly ex )
-    {
+    } catch (happyhttp::Wobbly) {
         p = Packet();
         p.WriteUInt32(0x5C0EE250);
         p.WriteString(si->Login);

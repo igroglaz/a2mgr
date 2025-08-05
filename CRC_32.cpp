@@ -92,8 +92,8 @@ DWORD WINAPI CRC_32::CRC32ThreadProc(LPVOID lpVoid)
         BYTE buffer[BUFFERSIZE];
 
         // Open the file
-        int theFile = _tsopen(pCRCSt->FileName, _O_RDONLY | _O_SEQUENTIAL | _O_BINARY, _SH_DENYWR);
-        if (theFile != -1)
+        int theFile;
+        if (_sopen_s(&theFile, pCRCSt->FileName, _O_RDONLY | _O_SEQUENTIAL | _O_BINARY, _SH_DENYWR, 0) == 0)
         {   // Get the file size
             _lseeki64(theFile, 0L, SEEK_SET);
             LONGLONG length = _lseeki64(theFile, 0L, SEEK_END);
@@ -308,7 +308,7 @@ DWORD CRC_32::CalcCRC(LPCTSTR FileName, HWND ProgressWnd/*= NULL*/)
     // setup the CRCStruct
     LPCRCStruct pCRCSt = new CRCStruct();
     pCRCSt->pCRC_32 = this;
-    _tcsncpy(pCRCSt->FileName, FileName, _MAX_PATH);
+    _tcsncpy_s(pCRCSt->FileName, _MAX_PATH, FileName, _TRUNCATE);
     pCRCSt->pByte = NULL;
     pCRCSt->size = 0;
     pCRCSt->hWnd = ProgressWnd;
