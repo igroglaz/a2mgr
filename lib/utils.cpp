@@ -12,8 +12,8 @@ bool CheckBool(const string& what)
 
 bool StrToBool(const string& what)
 {
-	string cr = Trim(ToLower(what));
-	if(cr == "yes" || cr == "true" || cr == "1" || cr == "y")
-		return true;
-	return false;
+    string cr = Trim(ToLower(what));
+    if(cr == "yes" || cr == "true" || cr == "1" || cr == "y")
+        return true;
+    return false;
 }

@@ -10,13 +10,13 @@ MapTile Tiles[52][14];
 
 void P_LoadTiles()
 {
-	static bool SDLInit = false;
-	if(!SDLInit)
-	{
-		if(SDL_Init(SDL_INIT_VIDEO) != 0)
-			return;
-		SDLInit = true;
-	}
+    static bool SDLInit = false;
+    if(!SDLInit)
+    {
+        if(SDL_Init(SDL_INIT_VIDEO) != 0)
+            return;
+        SDLInit = true;
+    }
 
     log_format("P_LoadTiles: Loading tiles...\n");
 
@@ -26,44 +26,44 @@ void P_LoadTiles()
         uint8_t tile_c = i & 0x0F;
         std::string file = Format("graphics/terrain/tile%u-%02u.bmp", tile_d, tile_c);
         //Image* img = new Image(file);
-		SDL_Surface* srf = SDL_LoadBMP(file.c_str());
-		if(!srf) log_format("  Error loading file \"%s\"!\n", file.c_str());
+        SDL_Surface* srf = SDL_LoadBMP(file.c_str());
+        if(!srf) log_format("  Error loading file \"%s\"!\n", file.c_str());
 
-		SDL_Surface* transformed = NULL;
-		uint32_t count_tiles = srf ? (srf->h / 32) : 0;
-		if(srf && (srf->w != 32))
-		{
-			log_format("  Error image dimensions, file \"%s\"!\n", file.c_str());
-			SDL_FreeSurface(srf);
-			srf = NULL;
-			count_tiles = 0;
-		}
+        SDL_Surface* transformed = NULL;
+        uint32_t count_tiles = srf ? (srf->h / 32) : 0;
+        if(srf && (srf->w != 32))
+        {
+            log_format("  Error image dimensions, file \"%s\"!\n", file.c_str());
+            SDL_FreeSurface(srf);
+            srf = NULL;
+            count_tiles = 0;
+        }
 
-		//if(srf->h % 32 != 0) count_tiles--;
+        //if(srf->h % 32 != 0) count_tiles--;
 
-		transformed = srf ? SDL_CreateRGBSurface(0, srf->w, srf->h, 16, 0xF800, 0x07E0, 0x001F, 0) : NULL;
-		if(srf && !transformed)
-		{
-			log_format("  Error converting image, file \"%s\"!\n", file.c_str());
-			SDL_FreeSurface(srf);
-			srf = NULL;
-			count_tiles = 0;
-		}
+        transformed = srf ? SDL_CreateRGBSurface(0, srf->w, srf->h, 16, 0xF800, 0x07E0, 0x001F, 0) : NULL;
+        if(srf && !transformed)
+        {
+            log_format("  Error converting image, file \"%s\"!\n", file.c_str());
+            SDL_FreeSurface(srf);
+            srf = NULL;
+            count_tiles = 0;
+        }
 
-		if(srf && transformed && (SDL_BlitSurface(srf, NULL, transformed, NULL) == -1))
-		{
-			log_format("  Error converting image, file \"%s\" (phase 2)!\n", file.c_str());
-			SDL_FreeSurface(transformed);
-			SDL_FreeSurface(srf);
-			transformed = NULL;
-			srf = NULL;
-			count_tiles = 0;
-		}
+        if(srf && transformed && (SDL_BlitSurface(srf, NULL, transformed, NULL) == -1))
+        {
+            log_format("  Error converting image, file \"%s\" (phase 2)!\n", file.c_str());
+            SDL_FreeSurface(transformed);
+            SDL_FreeSurface(srf);
+            transformed = NULL;
+            srf = NULL;
+            count_tiles = 0;
+        }
 
-		if(srf) SDL_FreeSurface(srf);
-		srf = NULL;
+        if(srf) SDL_FreeSurface(srf);
+        srf = NULL;
 
-		uint16_t* pixels = transformed ? (uint16_t*)transformed->pixels : NULL;
+        uint16_t* pixels = transformed ? (uint16_t*)transformed->pixels : NULL;
 
         for(uint32_t j = 0; j < 14; j++)
         {
@@ -93,8 +93,8 @@ void P_LoadTiles()
             }
         }
 
-		SDL_FreeSurface(transformed);
-		transformed = NULL;
+        SDL_FreeSurface(transformed);
+        transformed = NULL;
     }
 }
 
@@ -104,17 +104,17 @@ void P_UnloadTiles()
     {
         for(uint32_t j = 0; j < 14; j++)
         {
-			if(Tiles[i][j].Width == 32 &&
-				Tiles[i][j].Height == 32 &&
-				Tiles[i][j].Pixels &&
-				Tiles[i][j].Exists)
-			{
-				delete[] Tiles[i][j].Pixels;
-				Tiles[i][j].Pixels = NULL;
-				Tiles[i][j].Exists = false;
-				Tiles[i][j].Width = 0;
-				Tiles[i][j].Height = 0;
-			}
+            if(Tiles[i][j].Width == 32 &&
+                Tiles[i][j].Height == 32 &&
+                Tiles[i][j].Pixels &&
+                Tiles[i][j].Exists)
+            {
+                delete[] Tiles[i][j].Pixels;
+                Tiles[i][j].Pixels = NULL;
+                Tiles[i][j].Exists = false;
+                Tiles[i][j].Width = 0;
+                Tiles[i][j].Height = 0;
+            }
         }
     }
 }
@@ -124,19 +124,19 @@ void P_DisplayTile(uint16_t tile, int32_t x1, int32_t y1, int32_t x2, int32_t y2
     if(x1 != x3) return;
     if(x2 != x4) return;
 
-	static bool RenderBoundsReady = false;
-	static SDL_Rect RenderBounds;
+    static bool RenderBoundsReady = false;
+    static SDL_Rect RenderBounds;
 
-	if(!RenderBoundsReady)
-	{
-		RECT* rcSrc = (RECT*)(0x00625768);
-		RenderBounds.x = (int16_t)rcSrc->left;
-		RenderBounds.y = (int16_t)rcSrc->top;
-		RenderBounds.w = (int16_t)(rcSrc->right - rcSrc->left);
-		RenderBounds.h = (int16_t)(rcSrc->bottom - rcSrc->top);
+    if(!RenderBoundsReady)
+    {
+        RECT* rcSrc = (RECT*)(0x00625768);
+        RenderBounds.x = (int16_t)rcSrc->left;
+        RenderBounds.y = (int16_t)rcSrc->top;
+        RenderBounds.w = (int16_t)(rcSrc->right - rcSrc->left);
+        RenderBounds.h = (int16_t)(rcSrc->bottom - rcSrc->top);
 
-		RenderBoundsReady = true;
-	}
+        RenderBoundsReady = true;
+    }
 
     uint8_t tile_dc = (tile & 0x0FF0) >> 4;
     uint8_t tile_i = (tile & 0x000F);
@@ -171,7 +171,7 @@ void P_DisplayTile(uint16_t tile, int32_t x1, int32_t y1, int32_t x2, int32_t y2
     }
 
     uint16_t* pixels = Tiles[tile_dc][tile_i].Pixels;
-	uint32_t row_width = *(uint32_t*)(0x00625708);
+    uint32_t row_width = *(uint32_t*)(0x00625708);
     uint8_t* screen = *(uint8_t**)(0x0062571C);//(uint16_t*)RenderTarget->pixels;
 
     for(uint32_t x = 0; x < 32; x++)
@@ -194,7 +194,7 @@ void P_DisplayTile(uint16_t tile, int32_t x1, int32_t y1, int32_t x2, int32_t y2
             if(screenY >= RenderBounds.y + RenderBounds.h) continue;
 
             //screen[screenY * RenderBounds.w + screenX] = *(pixels + (uint32_t)inY);
-			*(uint16_t*)(screen + screenY * row_width + screenX * 2) = *(pixels + (uint32_t)inY);
+            *(uint16_t*)(screen + screenY * row_width + screenX * 2) = *(pixels + (uint32_t)inY);
         }
         pixels += 32;
     }
@@ -202,79 +202,79 @@ void P_DisplayTile(uint16_t tile, int32_t x1, int32_t y1, int32_t x2, int32_t y2
 
 void _stdcall P_LoadTilesNative(uint32_t flags)
 {
-	if(!flags)
-		P_UnloadTiles();
-	else P_LoadTiles();
+    if(!flags)
+        P_UnloadTiles();
+    else P_LoadTiles();
 }
 
 #pragma warning(push)
 #pragma warning(disable : 4733)
 void __declspec(naked) TILES_loadTiles()
 {
-	__asm
-	{
-		push	ebp
-		mov		ebp, esp
-		push	0xFFFFFFFF
-		push	0x005C86FD
-		mov		eax, fs:[0]
-		push	eax
-		mov		fs:[0], esp
-		sub		esp, 0x298
-		push	[ebp+0x08]
-		call	P_LoadTilesNative
-		mov		edx, 0x0047B8B7
-		jmp		edx
-	}
+    __asm
+    {
+        push	ebp
+        mov		ebp, esp
+        push	0xFFFFFFFF
+        push	0x005C86FD
+        mov		eax, fs:[0]
+        push	eax
+        mov		fs:[0], esp
+        sub		esp, 0x298
+        push	[ebp+0x08]
+        call	P_LoadTilesNative
+        mov		edx, 0x0047B8B7
+        jmp		edx
+    }
 }
 #pragma warning(pop)
 
 void _stdcall P_DisplayTileNative(uint16_t tile, int32_t x1, int32_t x2, int32_t h1, int32_t h2, int32_t h3, int32_t h4, uint32_t unk1, uint32_t unk2, uint32_t unk3, uint32_t unk4)
 {
-	//log_format("tile = %04X; x1 = %d, x2 = %d, h1 = %d, h2 = %d, h3 = %d, h4 = %d;\n", tile, x1, x2, h1, h2, h3, h4);
-	//log_format("             unk1 = %u, unk2 = %u, unk3 = %u, unk4 = %u;\n", unk1, unk2, unk3, unk4);
-	P_DisplayTile(tile, x1, h1, x2, h2, x1, h3, x2, h4);
+    //log_format("tile = %04X; x1 = %d, x2 = %d, h1 = %d, h2 = %d, h3 = %d, h4 = %d;\n", tile, x1, x2, h1, h2, h3, h4);
+    //log_format("             unk1 = %u, unk2 = %u, unk3 = %u, unk4 = %u;\n", unk1, unk2, unk3, unk4);
+    P_DisplayTile(tile, x1, h1, x2, h2, x1, h3, x2, h4);
 }
 
 void __declspec(naked) TILES_displayTile1()
 {
-	__asm
-	{
-		mov		eax, [ebp-0x2C]
-		add		eax, [ebp-0x38]
-		movzx	ecx, byte ptr [eax+1]
-		push	ecx
-		movzx	ecx, byte ptr [eax]
-		push	ecx
-		mov		eax, [ebp-0x2C]
-		add		eax, [ebp-0x48]
-		movzx	ecx, byte ptr [eax+1]
-		push	ecx
-		movzx	ecx, byte ptr [eax]
-		push	ecx
-		push	[ebp-0x6C]
-		push	[ebp-0x64]
-		push	[ebp-0x58]
-		push	[ebp-0x50]
-		mov		ecx, [ebp-0x24]
-		add		ecx, 1
-		shl		ecx, 5
-		push	ecx
-		mov		ecx, [ebp-0x24]
-		shl		ecx, 5
-		push	ecx
-		movzx	edx, word ptr [ebp-0x60]
-		push	edx
-		call	P_DisplayTileNative
-		mov		edx, 0x0040529D
-		jmp		edx
-	}
+    __asm
+    {
+        mov		eax, [ebp-0x2C]
+        add		eax, [ebp-0x38]
+        movzx	ecx, byte ptr [eax+1]
+        push	ecx
+        movzx	ecx, byte ptr [eax]
+        push	ecx
+        mov		eax, [ebp-0x2C]
+        add		eax, [ebp-0x48]
+        movzx	ecx, byte ptr [eax+1]
+        push	ecx
+        movzx	ecx, byte ptr [eax]
+        push	ecx
+        push	[ebp-0x6C]
+        push	[ebp-0x64]
+        push	[ebp-0x58]
+        push	[ebp-0x50]
+        mov		ecx, [ebp-0x24]
+        add		ecx, 1
+        shl		ecx, 5
+        push	ecx
+        mov		ecx, [ebp-0x24]
+        shl		ecx, 5
+        push	ecx
+        movzx	edx, word ptr [ebp-0x60]
+        push	edx
+        call	P_DisplayTileNative
+        mov		edx, 0x0040529D
+        jmp		edx
+    }
 }
 
 void __declspec(naked) TILES_debug()
 {
-	__asm
-	{
-		retn	
-	}
+    __asm
+    {
+        retn	
+    }
 }

@@ -25,7 +25,7 @@
 #endif
 
 #ifndef GL_UNSIGNED_SHORT_5_6_5
-	#define GL_UNSIGNED_SHORT_5_6_5 0x8363
+    #define GL_UNSIGNED_SHORT_5_6_5 0x8363
 #endif
 
 struct GLtex

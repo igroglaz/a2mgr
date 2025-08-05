@@ -93,7 +93,7 @@ void CScanrangeCalc::CalculateVision(int32_t x, int32_t y, uint16_t scanrange, u
     int32_t genY = y - 20;
     uint8_t ht_origin = func_GetHeight(x, y);
 
-	uint32_t result = 0;
+    uint32_t result = 0;
     pTablesVision[20][20] = vision2;
     for(int32_t i = 1; i < 20; i++)
     {
@@ -116,6 +116,6 @@ void CScanrangeCalc::CalculateVision(int32_t x, int32_t y, uint16_t scanrange, u
                 fdisp = true;
         }
 
-		if(!fdisp) break;
+        if(!fdisp) break;
     }
 }
