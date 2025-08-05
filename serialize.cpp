@@ -258,7 +258,7 @@ void CArchive::LoadFromStream(istream& stream)
 {
     uint8_t* buf = NULL;
     stream.seekg(0, ios::end);
-    uint32_t siz = stream.tellg();
+    uint32_t siz = (uint32_t)stream.tellg();
     stream.seekg(0, ios::beg);
     buf = new uint8_t[siz];
     stream.read((char*)buf, siz);

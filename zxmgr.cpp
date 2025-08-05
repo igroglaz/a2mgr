@@ -106,13 +106,13 @@ namespace zxmgr
             }
         }
 
-        void DrawText(unsigned long cptr, int x, int y, const char* string, unsigned long align, unsigned long color, unsigned long shadowpos)
+        void DrawText(unsigned long cptr, int x, int y, const char* string, unsigned long alignment, unsigned long color, unsigned long shadowpos)
         {
             __asm
             {
                 push	[shadowpos]
                 push	[color]
-                push	[align]
+                push	[alignment]
                 push	[string]
                 push	[y]
                 push	[x]
@@ -170,7 +170,7 @@ namespace zxmgr
         char line[2048];
         va_list va;
         va_start(va, s);
-        _vsnprintf(line, 1255, s, va);
+        vsnprintf(line, 1255, s, va);
         WriteChatRaw(line);
         va_end(va);
     }
@@ -180,7 +180,7 @@ namespace zxmgr
         char line[2048];
         va_list va;
         va_start(va, s);
-        _vsnprintf(line, 1255, s, va);
+        vsnprintf(line, 1255, s, va);
         AnsiToOem(line, line);
         WriteChatRaw(line);
         va_end(va);

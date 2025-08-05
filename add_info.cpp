@@ -27,7 +27,7 @@ bool _stdcall ConsoleProc(unsigned char ch, int unk)
 	if(r_stopwatch && ch == 0x10 && unk == 0x08 && (GetAsyncKeyState(VK_RSHIFT) & 0x8000)) // Right Shift
 	{
 		if(show_stopwatch && !show_stopwatch_frozen)
-			show_stopwatch_frozen = (time_t)difftime(time(NULL), start_time);
+			show_stopwatch_frozen = (unsigned long)difftime((time_t)time(NULL), start_time);
 		else
 		{
 			show_stopwatch = !show_stopwatch;
@@ -65,14 +65,14 @@ void ConsoleImpl()
 	if(lastSize != 0) num++;
 	//if(c_Visible)
 	{
-		cImageLeft->Display(pRect.left, 320);
+		cImageLeft->Display((int16_t)pRect.left, 320);
 		for(uint32_t i = 0; i < num; i++)
 		{
 			uint32_t width = 64;
 			if(i == num-1) width = lastSize;
 			cImageMid->DisplayEx(64+i*64, 320, 0, 0, width, 64, false);
 		}
-		cImageRight->Display(pRect.right-64, 320);
+		cImageRight->Display((int16_t)pRect.right-64, 320);
 
 		uint32_t pWidth = pRect.right-pRect.left;
 		num = pWidth / 64;
@@ -114,9 +114,12 @@ void _stdcall FpsImpl(unsigned long cptr, RECT* rcSrc2)
 	}
 	if(r_time)
 	{
-		time_t t = time(NULL);
-		struct tm *tm = localtime(&t);
-		string time_string = Format("%02u:%02u:%02u", tm->tm_hour, tm->tm_min, tm->tm_sec);
+        time_t t = time(NULL);
+        struct tm tm;
+		string time_string;
+        if (localtime_s(&tm, &t) == 0) {
+			time_string = Format("%02u:%02u:%02u", tm.tm_hour, tm.tm_min, tm.tm_sec);
+		}
 
 		Font::DrawText(FONT1, rcSrc2->right - 136, top, "time:", FONT_ALIGN_LEFT, FONT_COLOR_GRAY, 1);
 		Font::DrawText(FONT1, rcSrc2->right - 86, top, time_string.c_str(), FONT_ALIGN_LEFT, FONT_COLOR_WHITE, 1);
@@ -126,11 +129,13 @@ void _stdcall FpsImpl(unsigned long cptr, RECT* rcSrc2)
 	if(show_stopwatch && r_stopwatch)
 	{
 		time_t time_diff = show_stopwatch_frozen ? show_stopwatch_frozen : (time_t)difftime(time(NULL), start_time);
-		struct tm *td = gmtime(&time_diff);
+		struct tm td;
 
-		string time_string = Format("%02u:%02u:%02u", td->tm_hour, td->tm_min, td->tm_sec);
+		if (gmtime_s(&td, &time_diff) == 0) {
+			string time_string = Format("%02u:%02u:%02u", td.tm_hour, td.tm_min, td.tm_sec);
 
-		Font::DrawText(FONT1, rcSrc2->right - 86, top, time_string.c_str(), FONT_ALIGN_LEFT, FONT_COLOR_WHITE, 1);
+			Font::DrawText(FONT1, rcSrc2->right - 86, top, time_string.c_str(), FONT_ALIGN_LEFT, FONT_COLOR_WHITE, 1);
+		}
 	}
 }
 

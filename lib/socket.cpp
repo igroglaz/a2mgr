@@ -1,5 +1,6 @@
 #include "socket.hpp"
 #include <winsock2.h>
+#include <ws2tcpip.h>
 
 #include <fstream>
 #include "utils.hpp"
@@ -16,7 +17,11 @@ SOCKET SOCK_Connect(std::string addr, unsigned short port, std::string localaddr
     sockaddr_in local;
     memset(&local, 0, sizeof(local));
     local.sin_family = AF_INET;
-    local.sin_addr.s_addr = inet_addr(localaddr.c_str());
+    
+    if (inet_pton(AF_INET, localaddr.c_str(), &local.sin_addr) != 1) {
+        return SERR_NOTCREATED;
+    }
+
     local.sin_port = htons(localport);
     SOCKET out = socket(AF_INET, SOCK_STREAM, 0);
     if(out == INVALID_SOCKET) return SERR_NOTCREATED;
@@ -29,21 +34,29 @@ SOCKET SOCK_Connect(std::string addr, unsigned short port, std::string localaddr
     sockaddr_in remote;
     memset(&remote, 0, sizeof(remote));
     remote.sin_family = AF_INET;
-    if(CheckIP(addr)) remote.sin_addr.s_addr = inet_addr(addr.c_str());
-	else
-	{
-		struct hostent* host = gethostbyname(addr.c_str());
-		if(!host)
-		{
-			closesocket(out);
-			return SERR_NOTCREATED;
-		}
+    if (CheckIP(addr)) {
+        if (inet_pton(AF_INET, addr.c_str(), &remote.sin_addr) != 1) {
+            return SERR_NOTCREATED;
+        }
+    } else {
+        struct addrinfo hints = {}, *result = nullptr;
+        hints.ai_family = AF_INET;        // IPv4 only (like your original code)
+        hints.ai_socktype = SOCK_STREAM;  // Optional: if you're creating a TCP socket
 
-		remote.sin_addr.s_addr = *((unsigned long*)host->h_addr);
+        int err = getaddrinfo(addr.c_str(), nullptr, &hints, &result);
+        if (err != 0 || result == nullptr) {
+            closesocket(out);
+            return SERR_NOTCREATED;
+        }
+
+        struct sockaddr_in* ipv4 = (struct sockaddr_in*)result->ai_addr;
+        remote.sin_addr = ipv4->sin_addr;
+
+        freeaddrinfo(result);
 	}
+
     remote.sin_port = htons(port);
-    if(connect(out, (sockaddr*)&remote, sizeof(remote)) != 0)
-    {
+    if (connect(out, (sockaddr*)&remote, sizeof(remote)) != 0) {
         closesocket(out);
         return SERR_NOTCREATED;
     }
@@ -56,7 +69,9 @@ SOCKET SOCK_Listen(std::string addr, unsigned short port)
     sockaddr_in local;
     memset(&local, 0, sizeof(local));
     local.sin_family = AF_INET;
-    local.sin_addr.s_addr = inet_addr(addr.c_str());
+    if (inet_pton(AF_INET, addr.c_str(), &local.sin_addr) != 1) {
+        return SERR_NOTCREATED;
+    }
     local.sin_port = htons(port);
     SOCKET out = socket(AF_INET, SOCK_STREAM, 0);
     if(out == INVALID_SOCKET) return SERR_NOTCREATED;
@@ -183,10 +198,10 @@ namespace IPFilter
         }
         Addr = 0;
         Masked = 0;
-        uint8_t oc_1 = StrToInt(at[0]);
-        uint8_t oc_2 = StrToInt(at[1]);
-        uint8_t oc_3 = StrToInt(at[2]);
-        uint8_t oc_4 = StrToInt(at[3]);
+        uint8_t oc_1 = (uint8_t)StrToInt(at[0]);
+        uint8_t oc_2 = (uint8_t)StrToInt(at[1]);
+        uint8_t oc_3 = (uint8_t)StrToInt(at[2]);
+        uint8_t oc_4 = (uint8_t)StrToInt(at[3]);
         Addr |= oc_1;
         Addr <<= 8;
         Addr |= oc_2;

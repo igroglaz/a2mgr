@@ -27,6 +27,9 @@ CEMapObject::~CEMapObject()
 // 464F02 == copy constructor
 // 472D10 == destructor
 
+#pragma warning(push)
+#pragma warning(disable : 4733)
+
 // inject to: 464EEA
 void _declspec(naked) iCMapObject_Construct()
 {
@@ -73,3 +76,5 @@ void _declspec(naked) iCMapObject_CopyConstruct()
 		retn
 	}
 }
+
+#pragma warning(pop)

@@ -170,35 +170,35 @@ char * _stdcall chatAddStringCpp(char *msg, int type)
 		static char chatBuf[3000];
 		if (type == 1)
 		{
-			// аля
+			// Р°Р»СЏ
 			char* str_type = zxmgr::GetPatchString(223);
 			static char chatB2[128];
 			chatB2[127] = 0;
-			_snprintf(chatB2, 127, "[%s] ", str_type);
-			strcpy(chatBuf, chatB2);
-			strncat(chatBuf, msg, sizeof(chatBuf)-1);
+			sprintf_s(chatB2, 127, "[%s] ", str_type);
+			strcpy_s(chatBuf, chatB2);
+			strncat_s(chatBuf, msg, sizeof(chatBuf)-1);
 			return chatBuf;
 		}
 		else if (type == 2)
 		{
-			// приват
+			// РїСЂРёРІР°С‚
 			char* str_type = zxmgr::GetPatchString(224);
 			static char chatB2[128];
 			chatB2[127] = 0;
-			_snprintf(chatB2, 127, "[%s] ", str_type);
-			strcpy(chatBuf, chatB2);
-			strncat(chatBuf, msg, sizeof(chatBuf)-1);
+			sprintf_s(chatB2, 127, "[%s] ", str_type);
+			strcpy_s(chatBuf, chatB2);
+			strncat_s(chatBuf, msg, sizeof(chatBuf)-1);
 			return chatBuf;
 		}
 		else if (type == 3)
 		{
-			// вопль
+			// РІРѕРїР»СЊ
 			char* str_type = zxmgr::GetPatchString(225);
 			static char chatB2[128];
 			chatB2[127] = 0;
-			_snprintf(chatB2, 127, "[%s] ", str_type);
-			strcpy(chatBuf, chatB2);
-			strncat(chatBuf, msg, sizeof(chatBuf)-1);
+			sprintf_s(chatB2, 127, "[%s] ", str_type);
+			strcpy_s(chatBuf, chatB2);
+			strncat_s(chatBuf, msg, sizeof(chatBuf)-1);
 			return chatBuf;
 		}
 	}

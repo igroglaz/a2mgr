@@ -126,7 +126,6 @@ en_nofree:
         pop		ebp
         retn	4
 
-loc_retzero:
         mov		eax, 0
         
         mov		esp, ebp

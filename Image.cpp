@@ -114,9 +114,9 @@ void Image::DisplayEx(int16_t x, int16_t y, int16_t inX, int16_t inY, int16_t w,
 		inY = -oldY;
 	}
 
-	if(inX+w > myWidth)
+	if(inX+w > (int16_t)myWidth)
 		w = (myWidth-inX);
-	if(inY+h > myHeight)
+	if(inY+h > (int16_t)myHeight)
 		h = (myHeight-inY);
 
 	RECT pRect = *(RECT*)(0x00625768);
@@ -170,10 +170,10 @@ void Image::DisplayEx(int16_t x, int16_t y, int16_t inX, int16_t inY, int16_t w,
 
 			if(src_a != 255)
 			{
-				float alpha = (float)(src_a) / 255.0;
-				float Fout_r = (src_r * alpha) + (dst_r * (1.0-alpha));
-				float Fout_g = (src_g * alpha) + (dst_g * (1.0-alpha));
-				float Fout_b = (src_b * alpha) + (dst_b * (1.0-alpha));
+				double alpha = (double)(src_a) / 255.0;
+				double Fout_r = (src_r * alpha) + (dst_r * (1.0-alpha));
+				double Fout_g = (src_g * alpha) + (dst_g * (1.0-alpha));
+				double Fout_b = (src_b * alpha) + (dst_b * (1.0-alpha));
 
 				out_r = min((uint8_t)Fout_r, 0x1F);
 				out_g = min((uint8_t)Fout_g, 0x3F);
@@ -209,8 +209,8 @@ uint32_t Image::GetHeight()
 uint32_t Image::GetPixelAt(int32_t x, int32_t y)
 {
 	if(!myPixels) return 0;
-	if(x < 0 || x >= myWidth) return 0;
-	if(y < 0 || y >= myHeight) return 0;
+	if(x < 0 || x >= (int32_t)myWidth) return 0;
+	if(y < 0 || y >= (int32_t)myHeight) return 0;
 	return myPixels[y*myWidth+x];
 }
 

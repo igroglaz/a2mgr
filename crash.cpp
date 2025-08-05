@@ -99,7 +99,7 @@ void __declspec(naked) CRASH_fix_523295()
 		mov		edx, [ebp-0x0C]
 		cmp		byte ptr [edx+0x08], 0x17
 		jne		spell_not_tp
-spell_tp:
+
 		mov		al, 3
 		jmp		spell_any
 spell_not_tp:

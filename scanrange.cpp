@@ -9,8 +9,8 @@ bool a2mgr_CheckValid(int16_t x, int16_t y)
 {
     if(!scanrange_map) return false;
     return (x >= 7 && y >= 7 &&
-        x < *(uint32_t*)(scanrange_map + 0x84) - 7 &&
-        y < *(uint32_t*)(scanrange_map + 0x88) - 7);
+        x < (int16_t)*(uint32_t*)(scanrange_map + 0x84) - 7 &&
+        y < (int16_t)*(uint32_t*)(scanrange_map + 0x88) - 7);
 }
 
 uint8_t a2mgr_GetHeight(int16_t x, int16_t y)

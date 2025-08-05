@@ -272,7 +272,7 @@ int PASCAL recv_(SOCKET s, char* buf, int len, int flags)
 
         Packet pack;
         pack.Reset();
-        for (uint32_t i = 0; i < pkt_size; i++)
+        for (int i = 0; i < pkt_size; i++)
             pack.WriteUInt8(rd[i]);
         pack.Seek(0);
 
@@ -323,7 +323,6 @@ void __declspec(naked) NETPROTO_fixRecv()
         mov        edx, 0x0040DB41
         jmp        edx
 
-skip_packet:
         mov        edx, 0x00417C03
         jmp        edx
     }

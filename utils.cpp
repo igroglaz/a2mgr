@@ -22,12 +22,12 @@ void _stdcall log_format(char *s, ...)
     char line[1256], l2[1256];
     va_list va;
     va_start(va, s);
-    _vsnprintf(line, 1255, s, va);
+    vsnprintf_s(line, 1255, s, va);
     va_end(va);
     SYSTEMTIME tm;
     OemToChar(line, line);
     GetLocalTime(&tm);
-    sprintf(l2,"[%d.%.2d.%.4d %d:%.2d:%.2d] %s", tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond, /*tm.wMilliseconds, */line);
+    sprintf_s(l2, sizeof(l2), "[%d.%.2d.%.4d %d:%.2d:%.2d] %s", tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond, /*tm.wMilliseconds, */line);
     _LOG_FILE.open(_LOG_NAME.c_str(), ios::out | ios::app);
     if(_LOG_FILE.is_open())
     {
@@ -43,7 +43,7 @@ void _stdcall log_format2(char *s, ...)
     char line[1256];
     va_list va;
     va_start(va, s);
-    _vsnprintf(line, 1255, s, va);
+    vsnprintf_s(line, 1255, s, va);
     va_end(va);
     OemToChar(line, line);
     _LOG_FILE.open(_LOG_NAME.c_str(), ios::out | ios::app);
@@ -228,14 +228,14 @@ string ToUpper(const string& what)
 unsigned long StrToInt(const string& what)
 {
     unsigned long retval;
-    sscanf(what.c_str(), "%u", &retval);
+    sscanf_s(what.c_str(), "%u", &retval);
     return retval;
 }
 
 double StrToFloat(const string& what)
 {
     double retval;
-    sscanf(what.c_str(), "%f", &retval);
+    sscanf_s(what.c_str(), "%lf", &retval);
     return retval;
 }
 

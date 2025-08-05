@@ -70,7 +70,7 @@ void addString(char* pthis)
 	{
 		vector<string> strings;
 		unsigned long* stringsa = *(unsigned long**)(arrptr+0x04);
-		for(int i = 0; i < str_count; i++)
+		for(unsigned long i = 0; i < str_count; i++)
 		{
 			char* stringc = (char*)stringsa[i];
 			strings.push_back(stringc);
@@ -93,8 +93,9 @@ unsigned long setString(char* pthis)
 	{
 		str_array_resize(arrptr, str_count-1);
 		unsigned long* stringsa = *(unsigned long**)(arrptr+0x04);
-		for(int i = 0; i < str_count-1; i++)
+		for (unsigned long i = 0; i < str_count-1; i++) {
 			stringsa[i] = (unsigned long)_strdup(strings[i].c_str());
+		}
 
 		char** cstr = (char**)(pthis+0x84);
 		str_empty(cstr);
@@ -216,7 +217,6 @@ c_up:
 		call	consoleUp
 		jmp		c_exit
 
-c_tab:
 		push	dword ptr [ebp-4]
 		call	consoleTab
 		jmp		c_exit_1

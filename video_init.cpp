@@ -62,8 +62,7 @@ void _stdcall get_res(int *w, int *h)
         {
             const char* tmpr = (*i).c_str();
             int w1, h1;
-            if(sscanf(tmpr, "--res:%dx%d", &w1, &h1) == 2)
-            {
+            if (sscanf_s(tmpr, "--res:%dx%d", &w1, &h1) == 2) {
                 *w = w1;
                 *h = h1;
             }
