@@ -4,12 +4,12 @@
 
 struct MapTile
 {
-	MapTile()
-	{
-		Exists = false;
-		Width = Height = 0;
-		Pixels = NULL;
-	}
+    MapTile()
+    {
+        Exists = false;
+        Width = Height = 0;
+        Pixels = NULL;
+    }
 
     bool Exists;
     uint32_t Width;

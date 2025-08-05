@@ -1,4 +1,4 @@
 void __declspec(naked) SYSTEM_setThreadPriority()
 {
-	__asm retn 8;
+    __asm retn 8;
 }

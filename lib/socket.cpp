@@ -8,8 +8,8 @@
 
 bool CheckIP(std::string addr)
 {
-	std::vector<std::string> addr2 = Explode(addr, ".");
-	return ((addr2.size() == 4) && CheckInteger(addr2[0]) && CheckInteger(addr2[1]) && CheckInteger(addr2[2]) && CheckInteger(addr2[3]));
+    std::vector<std::string> addr2 = Explode(addr, ".");
+    return ((addr2.size() == 4) && CheckInteger(addr2[0]) && CheckInteger(addr2[1]) && CheckInteger(addr2[2]) && CheckInteger(addr2[3]));
 }
 
 SOCKET SOCK_Connect(std::string addr, unsigned short port, std::string localaddr, unsigned short localport)
@@ -53,7 +53,7 @@ SOCKET SOCK_Connect(std::string addr, unsigned short port, std::string localaddr
         remote.sin_addr = ipv4->sin_addr;
 
         freeaddrinfo(result);
-	}
+    }
 
     remote.sin_port = htons(port);
     if (connect(out, (sockaddr*)&remote, sizeof(remote)) != 0) {
@@ -99,35 +99,35 @@ SOCKET SOCK_Accept(SOCKET listener, sockaddr_in& addr)
 
 int SOCK_SendPacket(SOCKET socket, Packet& packet, unsigned long protover, bool extended)
 {
-	if(!extended)
-	{
-		if(!packet.GetLength()) return 0;
-		uint8_t* data = new uint8_t[packet.GetLength()];
-		uint32_t size = packet.GetLength();
-		std::vector<uint8_t> tbuf = packet.GetBuffer();
-		for(uint32_t i = 0; i < size; i++)
-			data[i] = tbuf[i];
+    if(!extended)
+    {
+        if(!packet.GetLength()) return 0;
+        uint8_t* data = new uint8_t[packet.GetLength()];
+        uint32_t size = packet.GetLength();
+        std::vector<uint8_t> tbuf = packet.GetBuffer();
+        for(uint32_t i = 0; i < size; i++)
+            data[i] = tbuf[i];
 
-		int ret_code = send_msg(socket, protover, data, size, 1);
-		delete[] data;
-		if(ret_code == -2) return SERR_TIMEOUT;
-		if(ret_code == -1) return SERR_CONNECTION_LOST;
-		return 0;
-	}
-	else
-	{
-		uint8_t* data = new uint8_t[packet.GetLength()+8];
-		*(uint32_t*)(data) = packet.GetLength();
-		*(uint32_t*)(data+4) = 0x80100000;
-		std::vector<uint8_t> tbuf = packet.GetBuffer();
-		for(uint32_t i = 0; i < packet.GetLength(); i++)
-			data[i+8] = tbuf[i];
+        int ret_code = send_msg(socket, protover, data, size, 1);
+        delete[] data;
+        if(ret_code == -2) return SERR_TIMEOUT;
+        if(ret_code == -1) return SERR_CONNECTION_LOST;
+        return 0;
+    }
+    else
+    {
+        uint8_t* data = new uint8_t[packet.GetLength()+8];
+        *(uint32_t*)(data) = packet.GetLength();
+        *(uint32_t*)(data+4) = 0x80100000;
+        std::vector<uint8_t> tbuf = packet.GetBuffer();
+        for(uint32_t i = 0; i < packet.GetLength(); i++)
+            data[i+8] = tbuf[i];
 
-		int ret_code = send(socket, (const char*)data, packet.GetLength()+8, 0);
-		delete[] data;
-		if(ret_code == -1) return SERR_CONNECTION_LOST;
-		return 0;
-	}
+        int ret_code = send(socket, (const char*)data, packet.GetLength()+8, 0);
+        delete[] data;
+        if(ret_code == -1) return SERR_CONNECTION_LOST;
+        return 0;
+    }
 }
 
 int SOCK_ReceivePacket(SOCKET socket, Packet& packet, unsigned long protover)
@@ -160,8 +160,8 @@ int SOCK_ReceivePacket(SOCKET socket, Packet& packet, unsigned long protover)
         origin = _org;
         PACKET_XorByKey(data, _siz, protover);
         //packet.AppendData((uint8_t*)data, _siz);
-		for(uint32_t i = 0; i < _siz; i++)
-			packet.WriteUInt8(data[i]);
+        for(uint32_t i = 0; i < _siz; i++)
+            packet.WriteUInt8(data[i]);
         delete[] data;
     }
     packet.Seek(0);
@@ -311,7 +311,7 @@ bool PacketReceiver::Receive(uint32_t version)
     if(zz == SERR_TIMEOUT) return true;
     else if(zz == SERR_CONNECTION_LOST) return false;
 
-	pack.SaveToStream(Queue.back());
+    pack.SaveToStream(Queue.back());
 
     if(zz == 0)
     {

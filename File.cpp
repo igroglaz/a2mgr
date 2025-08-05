@@ -24,8 +24,8 @@ bool FileArchive::Open(std::string filename, std::string directory)
     str.read((char*)&fat_offset, 4);
     str.read((char*)&fat_size, 4);
 
-	str.seekg(fat_offset);
-	size_t pos = (size_t)str.tellg();
+    str.seekg(fat_offset);
+    size_t pos = (size_t)str.tellg();
     if(pos != (size_t)fat_offset)
         return false;
 
@@ -71,7 +71,7 @@ bool FileArchive::Open(std::string filename, std::string directory)
             r.Flags = r_type;
             r.Name = r_name;
             r.ResourceName = filename;
-			stack_records.back()->Children.push_back(r);
+            stack_records.back()->Children.push_back(r);
 
             if(r.Flags & 1) // directory
             {
@@ -140,12 +140,12 @@ File::File()
 bool File::Open(std::string filename)
 {
     filename = TruncateSlashes(FixSlashes(filename));
-	if(filename.find("patch/") == std::string::npos)
-	{
-		bool ffo = Open("patch/"+filename);
-		if(ffo) return true;
-		Close();
-	}
+    if(filename.find("patch/") == std::string::npos)
+    {
+        bool ffo = Open("patch/"+filename);
+        if(ffo) return true;
+        Close();
+    }
 
     myStream.open(filename.c_str(), std::ios::in | std::ios::binary);
 
@@ -162,23 +162,23 @@ bool File::Open(std::string filename)
     }
     else
     {
-		myStream.clear();
+        myStream.clear();
         const FileArchive::Record& record = Archives.GetRecord(filename);
         if(record.Flags & 2) return false;
         if(record.Flags & 1) return false;
         myStream.open(record.ResourceName.c_str(), std::ios::in | std::ios::binary);
         if(!myStream.is_open()) return false;
 
-		myName = filename;
-		myOffset = record.Offset;
-		myLength = record.Length;
-		myPosition = 0;
-		myStream.seekg(myOffset, std::ios::beg);
-		if((uint32_t)myStream.tellg() != myOffset)
-		{
-			myStream.close();
-			return false;
-		}
+        myName = filename;
+        myOffset = record.Offset;
+        myLength = record.Length;
+        myPosition = 0;
+        myStream.seekg(myOffset, std::ios::beg);
+        if((uint32_t)myStream.tellg() != myOffset)
+        {
+            myStream.close();
+            return false;
+        }
 
         myOpen = true;
         return true;
@@ -198,7 +198,7 @@ uint32_t File::Read(void* cwhere, uint32_t size)
         size = myLength-myPosition;
     if(!size) return 0;
 
-	myStream.seekg(myOffset+myPosition, std::ios::beg);
+    myStream.seekg(myOffset+myPosition, std::ios::beg);
     myStream.read((char*)cwhere, size);
     uint32_t cnt = (uint32_t)myStream.gcount();
     myPosition += cnt;
@@ -261,8 +261,8 @@ uint32_t File::CalcCRC()
 
 bool FileExistsEx(std::string filename)
 {
-	File f;
-	if(!f.Open(filename)) return false;
-	f.Close();
-	return true;
+    File f;
+    if(!f.Open(filename)) return false;
+    f.Close();
+    return true;
 }

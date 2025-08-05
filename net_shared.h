@@ -6,11 +6,11 @@
 class CPacket : public CArchive
 {
     public:
-		void FromPacket(uint8_t* data);
-		uint32_t GetOrigin();
+        void FromPacket(uint8_t* data);
+        uint32_t GetOrigin();
 
-	protected:
-		uint32_t origin;
+    protected:
+        uint32_t origin;
 };
 
 #endif // NET_SHARED_H_INCLUDED
