@@ -50,6 +50,7 @@ unsigned char sha1_uuid[20];
 int z_softcore = 0;
 
 bool hotkey_debug = false;
+bool stats_based_level_selection = true;
 
 using namespace std;
 
@@ -213,6 +214,12 @@ void ParseConfig2x(ifstream& f_temp)
                 hotkey_debug = StrToBoolean(cmd[1]);
             } else {
                 hotkey_debug = true;
+            }
+        } else if (cmd[0] == "stats_based_level_selection") {
+            if (cmd.size() == 2) {
+                stats_based_level_selection = StrToBoolean(cmd[1]);
+            } else {
+                stats_based_level_selection = true;
             }
         }
     }
