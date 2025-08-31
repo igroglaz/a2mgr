@@ -124,41 +124,106 @@ ggme_ret1:
 }
 #pragma warning(pop)
 
+struct StatsInfo {
+    uint32_t fields[5];
+    uint8_t body, reaction, mind, spirit;
+};
+
+auto stats_info = (StatsInfo*)0x006995a8;
+
+int ParseServerNumber(const char* row) {
+    // Row example:
+    //  |[6:38] #1 Mind < 15|1.02|Road to Plagat|64x64|1|0|127.0.0.1:8001|
+    // It's sent by hat, see `CLCMD_SendServerList`.
+    // We're parsing the first part and extracting the level from it, so `#1` -> 1 in this example.
+
+    if (row[0] != '|' || row[1] != '[') {
+        log_format("stats_level: wrong row syntax (doesn't start with `|[`), failing open: '%s'\n", row);
+        return 0;
+    }
+
+    const char* second_pipe = strchr(row+2, '|');
+    if (!second_pipe) {
+        log_format("stats_level: wrong row syntax (no second `|`), failing open: '%s'\n", row);
+        return 0;
+    }
+
+    const char* hash = strstr(row, "] #");
+    if (!hash) {
+        log_format("stats_level: wrong row syntax (no `] #` found), failing open: '%s'\n", row);
+        return 0;
+    }
+
+    if (hash > second_pipe) {
+        log_format("stats_level: wrong row syntax (`] #` not found in first section), failing open: '%s'\n", row);
+        return 0;
+    }
+
+    const char* level_ptr = hash + 3;
+    if (!('1' <= *level_ptr && *level_ptr <= '9')) {
+        log_format("stats_level: wrong row syntax (`#` not followed by a number), failing open: '%s'\n", level_ptr);
+        return 0;
+    }
+
+    int server_number = 0;
+    while ('0' <= *level_ptr && *level_ptr <= '9') {
+        server_number = server_number * 10 + (*level_ptr - '0');
+        level_ptr++;
+    }
+
+    return server_number;
+}
+
+bool __fastcall StatsBasedLevelSelection(uint8_t* obj, int row_number) {
+    if (!stats_based_level_selection) {
+        return true;
+    }
+
+    if (!obj) {
+        log_format("stats_level: obj is null, failing open\n");
+        return true;
+    }
+
+    uint8_t* subfield = *(uint8_t**)(obj + 0x68);
+    const char* row = *(const char**)(subfield + row_number * 4);
+
+    int server_number = ParseServerNumber(row);
+
+    switch (server_number) {
+        case 0:
+            return true; // Fail open.
+        case 1:
+            return stats_info->mind < 15;
+        case 2:
+            return stats_info->mind >= 15 && stats_info->reaction < 20;
+        case 3:
+            return 20 <= stats_info->reaction && stats_info->reaction < 30;
+        case 4:
+            return 30 <= stats_info->reaction && stats_info->reaction < 40;
+        case 5:
+            return 40 <= stats_info->reaction && (stats_info->reaction < 50 || stats_info->mind < 50 || stats_info->spirit < 50);
+        default:
+            return stats_info->reaction >= 50 && stats_info->mind >= 50 && stats_info->spirit >= 50;
+    }
+}
+
 // disable check player skills - is he allowed to enter the server (it was 26-50-90 brackets by default)
 void __declspec(naked) GUI_softcoreEnter()
 {
     __asm
     { // 44DD0F
-        mov     ecx, [ebp-0x18]
-        add     ecx, 0x468
+        mov ecx, DWORD PTR [ebp-0x2c] // Current object, holds the row received from hat.
+        mov edx, DWORD PTR [ebp+0x8] // Row number.
+        call StatsBasedLevelSelection
 
-        mov     edx, [ebp-0x10]
-        add     edx, 1
-
-/*///////////////////////////////////
-// we comment this out - to allow to enter all servers without
-//  check on min-max skills (it's client UI block - greyish non-clickable line)
-
-        cmp     [z_softcore], 0 // z_softcore in vanilla mode is 0 .. if equal: ZF = 1
-        jnz     test_upper      // if not softcore - go test test
-
-        cmp     [ecx+0x114], edx
-        jg      test_failed
-
-test_upper:
-
-        cmp     [ecx+0x118], edx
-        jl      test_failed
-
-        cmp     [ebp-0x14], 0x10
-        jge     test_failed
-                                   //
-///////////////////////////////////*/
+        test al, al
+        jz forbidden
 
         mov     [ebp-0x40], 1
         mov     edx, 0x0044DD55
         jmp     edx
 
+    forbidden:
         mov     edx, 0x0044DD4E
         jmp     edx
     }

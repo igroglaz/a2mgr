@@ -55,6 +55,7 @@ extern std::string current_directory;
 extern int z_softcore;
 
 extern bool hotkey_debug;
+extern bool stats_based_level_selection;
 
 #define PROTO_VER 20
 
