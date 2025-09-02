@@ -125,11 +125,22 @@ ggme_ret1:
 #pragma warning(pop)
 
 struct StatsInfo {
-    uint32_t fields[5];
+    uint32_t monster_kills, player_kills, frags;
+    uint32_t deaths;
+    uint32_t money;
     uint8_t body, reaction, mind, spirit;
+    uint32_t spells, active_spell;
+    uint32_t experience[5];
 };
 
 auto stats_info = (StatsInfo*)0x006995a8;
+
+// That's a bit of a hack. The newly created character doesn't read the saved `a2c`
+// file, so in `StatsBasedLevelSelection` we'll see the stats of the last selected
+// character. To fix, when the client is rendering the character creation screen
+// (specifically, the buttons to increase/decrease the base stats) remember that we're
+// creating a new character.
+bool creating_new_character = false;
 
 int ParseServerNumber(const char* row) {
     // Row example:
@@ -188,10 +199,16 @@ bool __fastcall StatsBasedLevelSelection(uint8_t* obj, int row_number) {
     const char* row = *(const char**)(subfield + row_number * 4);
 
     int server_number = ParseServerNumber(row);
+    if (server_number == 0) {
+        return true; // Fail open.
+    }
+
+    if (creating_new_character) {
+        // New characters go to the first server.
+        return server_number == 1;
+    }
 
     switch (server_number) {
-        case 0:
-            return true; // Fail open.
         case 1:
             return stats_info->mind < 15;
         case 2:
@@ -226,5 +243,36 @@ void __declspec(naked) GUI_softcoreEnter()
     forbidden:
         mov     edx, 0x0044DD4E
         jmp     edx
+    }
+}
+
+void NewCharacterScreen() {
+    creating_new_character = true;
+}
+
+// Address: 0042b599
+void __declspec(naked) new_character_screen() {
+    NewCharacterScreen();
+
+    __asm {
+        mov DWORD PTR [ebp-0x4], 0xffffffff
+        mov ebx, 0x0042b5a0
+        jmp ebx
+    }
+}
+
+void LoadCharacter() {
+    creating_new_character = false;
+}
+
+// Address: 004f75f5
+void __declspec(naked) load_character() {
+    __asm {
+        mov DWORD PTR[ecx], 0
+
+        call LoadCharacter
+
+        mov ecx, 0x004f75fb
+        jmp ecx
     }
 }

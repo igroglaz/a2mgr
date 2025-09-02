@@ -116,6 +116,8 @@
 0 116 4AF8E6 // : MENU_hover1
 0 117 4AF8C3 // : MENU_hover2
 0 118 4AFA5B // : MENU_hover3
+0 119 0042b599 // new_character_screen
+0 120 004f75f5 // load_character
 
 //0 300 426DA9
 //0 301 427014
