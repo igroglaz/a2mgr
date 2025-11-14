@@ -122,6 +122,8 @@ MENU_hover3			@118 NONAME
 new_character_screen    @119 NONAME
 load_character          @120 NONAME
 
+info_experience_spaces @150
+
 ; nosingle
 
 DBG_load256		@300

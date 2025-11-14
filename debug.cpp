@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <dbghelp.h>
 #include "utils.h"
 #include "debug.h"
 #include "zxmgr.h"
@@ -38,43 +39,93 @@ void __declspec(naked) DBG_logStrings()
     }
 }
 
+void Traceback(CONTEXT* ctx) {
+    HANDLE hProcess = GetCurrentProcess();
+    HANDLE hThread = GetCurrentThread();
+
+    STACKFRAME64 frame = {};
+    frame.AddrPC.Offset = ctx->Eip;
+    frame.AddrPC.Mode = AddrModeFlat;
+    frame.AddrFrame.Offset = ctx->Ebp;
+    frame.AddrFrame.Mode = AddrModeFlat;
+    frame.AddrStack.Offset = ctx->Esp;
+    frame.AddrStack.Mode = AddrModeFlat;
+
+    DWORD machineType = IMAGE_FILE_MACHINE_I386;
+
+    if (!SymInitialize(hProcess, NULL, TRUE)) {
+        log_format("[crash_filter] Failed to initialize symbol table\n");
+    }
+
+    log_format("=== Stack Trace Start ===\n");
+
+    for (int i = 0; i < 64; ++i) {
+        if (!StackWalk64(machineType, hProcess, hThread, &frame, ctx, NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL)) {
+            break;
+        }
+
+        DWORD64 addr = frame.AddrPC.Offset;
+        if (i && addr == 0) {
+            break;
+        }
+
+        BYTE symbolBuffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME] = {};
+        SYMBOL_INFO* symbol = (SYMBOL_INFO*)symbolBuffer;
+        symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+        symbol->MaxNameLen = MAX_SYM_NAME;
+
+        DWORD64 displacement = 0;
+        if (SymFromAddr(hProcess, addr, &displacement, symbol)) {
+            log_format("  [0x%08llx] %s + 0x%llx\n", addr, symbol->Name, displacement);
+        } else {
+            log_format("  [0x%08llx] (no symbol)\n", addr);
+        }
+    }
+
+    SymCleanup(hProcess);
+    log_format("=== Stack Trace End ===\n");
+}
+
+void PrintStackTrace(EXCEPTION_POINTERS *info) {
+    log_format("EXCEPTION DUMP:\neax=%08Xh,ebx=%08Xh,ecx=%08Xh,edx=%08Xh,\nesp=%08Xh,ebp=%08Xh,esi=%08Xh,edi=%08Xh;\neip=%08Xh;\naddr=%08Xh,code=%08Xh,flags=%08Xh\n",
+            info->ContextRecord->Eax,
+            info->ContextRecord->Ebx,
+            info->ContextRecord->Ecx,
+            info->ContextRecord->Edx,
+            info->ContextRecord->Esp,
+            info->ContextRecord->Ebp,
+            info->ContextRecord->Esi,
+            info->ContextRecord->Edi,
+            info->ContextRecord->Eip,
+            info->ExceptionRecord->ExceptionAddress,
+            info->ExceptionRecord->ExceptionCode,
+            info->ExceptionRecord->ExceptionFlags);
+
+    log_format("BEGIN STACK TRACE: %08Xh [%08Xh] <= ", info->ExceptionRecord->ExceptionAddress, *(unsigned long*)(info->ContextRecord->Esp));
+    unsigned long stebp = *(unsigned long*)(info->ContextRecord->Ebp);
+    while(true)
+    {
+        bool bad_ebp = false;
+        if(stebp & 3) bad_ebp = true;
+        if(!bad_ebp || IsBadReadPtr((void*)stebp, 8)) bad_ebp = true;
+
+        if(bad_ebp) /* ? */ break;
+
+        log_format2("%08Xh <= ", *(unsigned long*)(stebp+4));
+        stebp = *(unsigned long*)(stebp); // o_O
+    }
+    log_format2("END STACK TRACE\n");
+
+    log_format("a2mgr crashed.\n\n");
+}
+
 DWORD exc_handler_run(struct _EXCEPTION_POINTERS *info)
 {
     __try
     {
-        // dump info
-        log_format("EXCEPTION DUMP:\neax=%08Xh,ebx=%08Xh,ecx=%08Xh,edx=%08Xh,\nesp=%08Xh,ebp=%08Xh,esi=%08Xh,edi=%08Xh;\neip=%08Xh;\naddr=%08Xh,code=%08Xh,flags=%08Xh\n",
-                info->ContextRecord->Eax,
-                info->ContextRecord->Ebx,
-                info->ContextRecord->Ecx,
-                info->ContextRecord->Edx,
-                info->ContextRecord->Esp,
-                info->ContextRecord->Ebp,
-                info->ContextRecord->Esi,
-                info->ContextRecord->Edi,
-                info->ContextRecord->Eip,
-                info->ExceptionRecord->ExceptionAddress,
-                info->ExceptionRecord->ExceptionCode,
-                info->ExceptionRecord->ExceptionFlags);
+        PrintStackTrace(info);
+        Traceback(info->ContextRecord);
 
-        log_format("BEGIN STACK TRACE: %08Xh [%08Xh] <= ", info->ExceptionRecord->ExceptionAddress, *(unsigned long*)(info->ContextRecord->Esp));
-        unsigned long stebp = *(unsigned long*)(info->ContextRecord->Ebp);
-        while(true)
-        {
-            bool bad_ebp = false;
-            if(stebp & 3) bad_ebp = true;
-            if(!bad_ebp || IsBadReadPtr((void*)stebp, 8)) bad_ebp = true;
-
-            if(bad_ebp) /* ? */ break;
-
-            log_format2("%08Xh <= ", *(unsigned long*)(stebp+4));
-            stebp = *(unsigned long*)(stebp); // o_O
-        }
-        log_format2("END STACK TRACE\n");
-
-        log_format("a2mgr crashed.\n\n");
-        
-        //if(_LOG_FILE.is_open()) _LOG_FILE.close();
         TerminateProcess(GetCurrentProcess(), 1); // гарантированно бахнет
     }
     __except(EXCEPTION_EXECUTE_HANDLER)
@@ -357,5 +408,47 @@ dds_skip:
 loc_4688D6:
         mov		edx, 0x004688D6
         jmp		edx
+    }
+}
+
+void FormatWithSpaces(int number, char* out_buf, size_t buf_size) {
+    char temp[32];
+    std::snprintf(temp, sizeof(temp), "%d", number);
+
+    size_t len = std::strlen(temp);
+    size_t out_i = 0;
+    int digits = 0;
+
+    for (size_t i = len; i-- > 0;) {
+        if (out_i + 2 >= buf_size) break; // space for char + null
+        out_buf[out_i++] = temp[i];
+        digits++;
+        if (digits % 3 == 0 && i != 0 && temp[i - 1] != '-') {
+            if (out_i + 2 >= buf_size) break;
+            out_buf[out_i++] = ' ';
+        }
+    }
+
+    out_buf[out_i] = '\0';
+
+    // Reverse result in place
+    for (size_t i = 0, j = out_i - 1; i < j; ++i, --j) {
+        std::swap(out_buf[i], out_buf[j]);
+    }
+}
+
+void __fastcall ExperienceToString(int experience, char* buffer) {
+    FormatWithSpaces(experience, buffer, 16);
+}
+
+// Address: 0x00470d13
+void __declspec(naked) info_experience_spaces() {
+    __asm {
+        lea edx, [ebp - 0x124]
+        // ECX holds the experience
+        call ExperienceToString
+
+        mov edx, 0x00470d28
+        jmp edx
     }
 }

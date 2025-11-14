@@ -5,7 +5,7 @@ project(a2mgr)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-link_libraries(ws2_32)
+link_libraries(ws2_32 dbghelp)
 
 add_library(a2mgr SHARED a2mgr.def
     a2mgr.cpp

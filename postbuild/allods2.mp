@@ -119,6 +119,8 @@
 0 119 0042b599 // new_character_screen
 0 120 004f75f5 // load_character
 
+0 150 00470d13 // info_experience_spaces
+
 //0 300 426DA9
 //0 301 427014
 //0 302 427140
