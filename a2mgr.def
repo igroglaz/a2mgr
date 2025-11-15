@@ -122,7 +122,8 @@ MENU_hover3			@118 NONAME
 new_character_screen    @119 NONAME
 load_character          @120 NONAME
 
-info_experience_spaces @150
+info_experience_spaces  @150
+is_spell_book_open      @151
 
 ; nosingle
 

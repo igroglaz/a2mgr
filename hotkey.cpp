@@ -96,6 +96,9 @@ std::unordered_map<int, std::string> labels = CreateLabels();
 std::unordered_map<int, std::unique_ptr<Hotkey>> custom_hotkeys;
 uint32_t custom_hotkeys_loaded_for = 0;
 
+// Couldn't figure out a normal way to check if the spell book is open, so we just track if the open or closed book is rendered.
+bool spell_book_is_open = false;
+
 bool LoadHotkeys(BinaryStream& stream, std::unordered_map<int, std::unique_ptr<Hotkey>>& new_hotkeys) {
     auto signature = stream.ReadUInt32();
     if (signature != 0xCC795074) {
@@ -236,12 +239,7 @@ const char* Label(int key) {
 }
 
 bool SpellBookOpen() {
-    if (!panel_object) {
-        log_format("[spellbook_open] no panel object saved\n");
-        return false;
-    }
-
-    return *(panel_object + 0x6c);
+    return spell_book_is_open;
 }
 
 bool MouseOverMagic() {
@@ -760,5 +758,29 @@ void __declspec(naked) spell_hotkey_set_selected() {
         // Jump to the end of the block (same as `spell_hotkey_set_mouse`). Original instruction is replayed in C++.
         mov eax, 0x004cf5c6
         jmp eax
+    }
+}
+
+void __fastcall IsSpellBookOpen(int spell_book_open) {
+    if (spell_book_is_open != bool(spell_book_open)) {
+        if (hotkey_debug) {
+            log_format("[hotkey_spell_book] Spell book is now open: %d\n", spell_book_open);
+        }
+    }
+    spell_book_is_open = bool(spell_book_open);
+}
+
+// Address: 004b758f
+void __declspec(naked) is_spell_book_open() {
+    __asm {
+        mov ecx, DWORD PTR [ebp-0x4]
+        mov edx, 0x0041cd38
+        call edx
+
+        mov ecx, eax
+        call IsSpellBookOpen
+
+        mov ecx, 0x004b7597
+        jmp ecx
     }
 }

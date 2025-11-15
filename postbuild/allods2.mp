@@ -120,6 +120,7 @@
 0 120 004f75f5 // load_character
 
 0 150 00470d13 // info_experience_spaces
+0 151 004b758f // is_spell_book_open
 
 //0 300 426DA9
 //0 301 427014
