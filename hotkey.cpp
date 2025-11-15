@@ -496,11 +496,18 @@ uint32_t __fastcall TopLevelKey(char* address, int key) {
         log_format("[top_level_key] address=0x%x, key=0x%x\n", address, key);
     }
 
-    if (*(int*)(address + 0x460) == 0 && ShouldHandle(key)) {
-        if (hotkey_debug) {
-            log_format("[top_level_key] jumping into the handler directly\n");
+    if (*(int*)(address + 0x460) == 0) {
+        if (ShouldHandle(key)) {
+            if (hotkey_debug) {
+                log_format("[top_level_key] jumping into the handler directly\n");
+            }
+            return 0x0048a399; // Block with all standard hotkeys (calls function `0040c989`).
         }
-        return 0x0048a399; // Block with all standard hotkeys (calls function `0040c989`).
+
+        // Tilde key. Change default behavior (if it's not bound by the user): open diplomacy, same as F3.
+        if (key == VK_OEM_3 && !shift && !ctrl) {
+            return 0x0048a277; // F3 handler.
+        }
     }
 
     return 0x0048a0e5; // Normal flow.
