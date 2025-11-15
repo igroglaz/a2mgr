@@ -43,6 +43,13 @@ void Traceback(CONTEXT* ctx) {
     HANDLE hProcess = GetCurrentProcess();
     HANDLE hThread = GetCurrentThread();
 
+    CONTEXT new_ctx = {};
+    if (!ctx) {
+        new_ctx.ContextFlags = CONTEXT_FULL;
+        RtlCaptureContext(&new_ctx);
+        ctx = &new_ctx;
+    }
+
     STACKFRAME64 frame = {};
     frame.AddrPC.Offset = ctx->Eip;
     frame.AddrPC.Mode = AddrModeFlat;

@@ -125,6 +125,8 @@ load_character          @120 NONAME
 info_experience_spaces  @150
 is_spell_book_open      @151
 
+info_panel_left_sprite @152
+
 ; nosingle
 
 DBG_load256		@300

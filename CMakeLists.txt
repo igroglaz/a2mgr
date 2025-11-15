@@ -26,6 +26,7 @@ add_library(a2mgr SHARED a2mgr.def
     gui_replace.cpp
     hotkey.cpp
     Image.cpp
+    infotext.cpp
     itempng.cpp
     landscape_renderer.cpp
     language.cpp

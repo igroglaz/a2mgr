@@ -121,6 +121,7 @@
 
 0 150 00470d13 // info_experience_spaces
 0 151 004b758f // is_spell_book_open
+0 152 0040a939  // info_panel_left_sprite
 
 //0 300 426DA9
 //0 301 427014
