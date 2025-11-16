@@ -505,7 +505,7 @@ uint32_t __fastcall TopLevelKey(char* address, int key) {
         }
 
         // Tilde key. Change default behavior (if it's not bound by the user): open diplomacy, same as F3.
-        if (key == VK_OEM_3 && !shift && !ctrl) {
+        if (key == VK_OEM_3) {
             return 0x0048a277; // F3 handler.
         }
     }
