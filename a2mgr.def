@@ -127,6 +127,8 @@ is_spell_book_open      @151
 
 info_panel_left_sprite @152
 
+character_stats         @153
+
 ; nosingle
 
 DBG_load256		@300
