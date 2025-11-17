@@ -276,3 +276,18 @@ void __declspec(naked) load_character() {
         jmp ecx
     }
 }
+
+// Address: 0051d2d8
+void __declspec(naked) character_stats() {
+    __asm {
+        // Set the stat ceiling to 100 for all stats.
+        mov BYTE PTR [ebp-0x20], 100
+        mov BYTE PTR [ebp-0xc], 100
+        mov BYTE PTR [ebp-0x24], 100
+        mov BYTE PTR [ebp-0x8], 100
+
+        // Jump to original code.
+        mov eax, 0x0051d359
+        jmp eax
+    }
+}
