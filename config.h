@@ -1,5 +1,8 @@
 #pragma once
+#include <map>
 #include <string>
+
+#include "hotkey.h"
 
 #define SCREENTYPE_PNG 0
 #define SCREENTYPE_JPG 1
@@ -56,6 +59,7 @@ extern int z_softcore;
 
 extern bool hotkey_debug;
 extern bool stats_based_level_selection;
+extern std::map<int, Alias> aliases;
 
 #define PROTO_VER 20
 

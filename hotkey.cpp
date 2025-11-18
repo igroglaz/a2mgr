@@ -91,6 +91,10 @@ std::unordered_map<int, std::string> CreateLabels() {
     return result;
 }
 
+bool IsTopLevelAction(Alias action) {
+    return action == Alias::DIPLOMACY || action == Alias::HELP;
+}
+
 std::unordered_map<int, std::string> labels = CreateLabels();
 
 std::unordered_map<int, std::unique_ptr<Hotkey>> custom_hotkeys;
@@ -504,9 +508,8 @@ uint32_t __fastcall TopLevelKey(char* address, int key) {
             return 0x0048a399; // Block with all standard hotkeys (calls function `0040c989`).
         }
 
-        // Tilde key. Change default behavior (if it's not bound by the user): open diplomacy, same as F3.
-        if (key == VK_OEM_3) {
-            return 0x0048a277; // F3 handler.
+        if (IsTopLevelAction(aliases[key]) && (AllowedWhileTyping(key) || !IsTyping())) {
+            return uint32_t(aliases[key]);
         }
     }
 
