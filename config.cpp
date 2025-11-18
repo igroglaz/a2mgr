@@ -1,4 +1,7 @@
+#include <windows.h>
+
 #include "config.h"
+#include "hotkey.h"
 #include "utils.h"
 
 std::string current_directory = "";
@@ -52,7 +55,85 @@ int z_softcore = 0;
 bool hotkey_debug = false;
 bool stats_based_level_selection = true;
 
+std::map<int, Alias> aliases;
+
 using namespace std;
+
+std::map<std::string, Alias> alias_names = {
+    {"help", Alias::HELP},
+    {"diplomacy", Alias::DIPLOMACY},
+};
+
+void ParseAlias(std::string name, std::string action) {
+    if (name.length() == 0) {
+        log_format("Ignored empty alias name");
+        return;
+    }
+
+    int key = 0;
+
+    // Both name and action are lowercased.
+    if (name.length() == 1 && 'a' <= name[0] && name[0] <= 'z') {
+        key = std::toupper(name[0]);
+    } else if (name[0] == 'f') {
+        int f_key = std::atoi(&name[1]);
+        if (1 <= f_key && f_key <= 24) {
+            key = VK_F1 + f_key - 1;
+        }
+    } else if (name == "backspace") {
+        key = VK_BACK;
+    } else if (name == "tab") {
+        key = VK_TAB;
+    } else if (name == "ins" || name == "insert") {
+        key = VK_INSERT;
+    } else if (name == "del" || name == "delete") {
+        key = VK_DELETE;
+    } else if (name == "home") {
+        key = VK_HOME;
+    } else if (name == "end") {
+        key = VK_END;
+    } else if (name.length() == 4 && name.compare(0, 3, "num") == 0) {
+        switch (name[3]) {
+            case '*': key = VK_MULTIPLY; break;
+            case '+': key = VK_ADD; break;
+            case '-': key = VK_SUBTRACT; break;
+            case '.': key = VK_DECIMAL; break;
+            case '/': key = VK_DIVIDE; break;
+        }
+    } else if (name.length() == 1) {
+        switch (name[0]) {
+            case '=': key = VK_OEM_PLUS; break;
+            case '-': key = VK_OEM_MINUS; break;
+            case ',': key = VK_OEM_COMMA; break;
+            case '.': key = VK_OEM_PERIOD; break;
+            case ';': case ':': key = VK_OEM_1; break;
+            case '/': key = VK_OEM_2; break;
+            case '`': case '~': key = VK_OEM_3; break;
+            case '[': case '{': key = VK_OEM_4; break;
+            case '\\': key = VK_OEM_5; break;
+            case ']': case '}': key = VK_OEM_6; break;
+            case '"': case '\'': key = VK_OEM_7; break;
+            case '+': key = VK_ADD; break; // `+` means `num+`.
+        }
+    }
+
+    if (key == 0) {
+        log_format("Unrecognized alias name: %s\n", name.c_str());
+        return;
+    }
+
+    auto alias = alias_names[action];
+    if (alias == Alias::DEFAULT) {
+        log_format("Unrecognized alias action: %s\n", action.c_str());
+        return;
+    }
+
+    aliases[key] = alias;
+
+    if (hotkey_debug) {
+        log_format("Aliased 0x%x to 0x%x\n", key, alias);
+    }
+}
 
 void ParseConfig2x(ifstream& f_temp)
 {
@@ -221,6 +302,8 @@ void ParseConfig2x(ifstream& f_temp)
             } else {
                 stats_based_level_selection = true;
             }
+        } else if (cmd.size() == 2 && cmd[0].compare(0, 6, "alias:") == 0) {
+            ParseAlias(ToLower(cmd[0].substr(6)), ToLower(cmd[1]));
         }
     }
 
