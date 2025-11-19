@@ -91,8 +91,37 @@ std::unordered_map<int, std::string> CreateLabels() {
     return result;
 }
 
-bool IsTopLevelAction(Alias action) {
-    return action == Alias::DIPLOMACY || action == Alias::HELP;
+bool IsTopLevelAction(Action action) {
+    return action == Action::DIPLOMACY || action == Action::HELP;
+}
+
+bool MaybeUnitAction(Action action) {
+    return action == Action::UNIT_A ||action == Action::UNIT_C || action == Action::UNIT_D
+        || action == Action::UNIT_G || action == Action::UNIT_L || action == Action::UNIT_M
+        || action == Action::UNIT_P || action == Action::UNIT_R || action == Action::UNIT_S
+        || action == Action::UNIT_T;
+}
+
+bool MaybeGlobalAction(Action action) {
+    // Note: [C], [L] and [T] are taken as unit actions. We use those to denote corresponding key.
+    return action == Action::ACTION_B || action == Action::UNIT_C || action == Action::ACTION_E
+     || action == Action::ACTION_F || action == Action::ACTION_H || action == Action::ACTION_I
+     || action == Action::ACTION_K || action == Action::UNIT_L || action == Action::ACTION_N
+     || action == Action::ACTION_O || action == Action::UNIT_T || action == Action::ACTION_U
+     || action == Action::ACTION_W;
+}
+
+uint32_t ToGlobalAction(Action action) {
+    switch (action) {
+    case Action::UNIT_C:
+        return static_cast<uint32_t>(Action::ACTION_C);
+    case Action::UNIT_L:
+        return static_cast<uint32_t>(Action::ACTION_L);
+    case Action::UNIT_T:
+        return static_cast<uint32_t>(Action::ACTION_T);
+    default:
+        return static_cast<uint32_t>(action);
+    }
 }
 
 std::unordered_map<int, std::string> labels = CreateLabels();
@@ -234,6 +263,16 @@ bool HotkeysAvailable() {
     return game_state == 1 && some_object != 0;
 }
 
+bool IsUnitSelected() {
+    if (key_handler_object == nullptr) {
+        return false;
+    }
+
+    int some_object_0x140 = *(int*)(key_handler_object+0x140);
+    int some_flag_0x144 = *(int*)(key_handler_object+0x144);
+    return !*ctrl && some_object_0x140 != 0 && (some_flag_0x144 & 0x24) == 0;
+}
+
 const char* Label(int key) {
     auto it = labels.find(key);
     if (it != labels.end()) {
@@ -336,7 +375,7 @@ void __declspec(naked) panel_toggle() {
     }
 }
 
-bool ShouldHandle(int key) {
+bool ShouldHandleHotkey(int key) {
     if (labels.count(key) == 0 || !HotkeysAvailable()) {
         return false;
     }
@@ -361,6 +400,28 @@ bool ShouldHandle(int key) {
     }
 
     return false;
+}
+
+uint32_t HandleAlias(int key) {
+    if (aliases[key] == Action::DEFAULT) {
+        return 0;
+    }
+
+    if (!HotkeysAvailable() || IsTyping() && !AllowedWhileTyping(key)) {
+        return 0;
+    }
+
+    if (IsUnitSelected()) {
+        if (MaybeUnitAction(aliases[key])) {
+            return static_cast<uint32_t>(aliases[key]);
+        }
+    }
+
+    if (MaybeGlobalAction(aliases[key])) {
+        return ToGlobalAction(aliases[key]);
+    }
+
+    return 0;
 }
 
 uint32_t __fastcall HotkeyHandler(int8_t* obj, int key, int8_t* window) {
@@ -395,11 +456,17 @@ uint32_t __fastcall HotkeyHandler(int8_t* obj, int key, int8_t* window) {
         log_format("[hotkey_handler] enter standard handler: obj=0x%x, key=0x%x;  win->0x41c=%d, this->0x80=%d, win->0xc0=%d\n", obj, key, game_state, some_object, is_typing);
     }
 
-    if (ShouldHandle(key)) {
+    if (ShouldHandleHotkey(key)) {
         if (hotkey_debug) {
             log_format("[hotkey_handler] jumping into the handler directly\n");
         }
         return 0x0040caff; // Jump right into F-key logic in this function.
+    }
+
+    // Not a hotkey. Check for alias.
+    auto address = HandleAlias(key);
+    if (address) {
+        return address;
     }
 
     return 0x0040c99d; // Resume normal function flow.
@@ -501,7 +568,7 @@ uint32_t __fastcall TopLevelKey(char* address, int key) {
     }
 
     if (*(int*)(address + 0x460) == 0) {
-        if (ShouldHandle(key)) {
+        if (ShouldHandleHotkey(key) || (aliases[key] != Action::DEFAULT && !IsTopLevelAction(aliases[key]))) {
             if (hotkey_debug) {
                 log_format("[top_level_key] jumping into the handler directly\n");
             }

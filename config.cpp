@@ -55,13 +55,33 @@ int z_softcore = 0;
 bool hotkey_debug = false;
 bool stats_based_level_selection = true;
 
-std::map<int, Alias> aliases;
+std::map<int, Action> aliases;
 
 using namespace std;
 
-std::map<std::string, Alias> alias_names = {
-    {"help", Alias::HELP},
-    {"diplomacy", Alias::DIPLOMACY},
+std::map<std::string, Action> alias_names = {
+    {"help", Action::HELP},
+    {"diplomacy", Action::DIPLOMACY},
+    {"a", Action::UNIT_A},
+    {"c", Action::UNIT_C},
+    {"d", Action::UNIT_D},
+    {"g", Action::UNIT_G},
+    {"l", Action::UNIT_L},
+    {"m", Action::UNIT_M},
+    {"p", Action::UNIT_P},
+    {"r", Action::UNIT_R},
+    {"s", Action::UNIT_S},
+    {"t", Action::UNIT_T},
+    {"b", Action::ACTION_B},
+    {"e", Action::ACTION_E},
+    {"f", Action::ACTION_F},
+    {"h", Action::ACTION_H},
+    {"i", Action::ACTION_I},
+    {"k", Action::ACTION_K},
+    {"n", Action::ACTION_N},
+    {"o", Action::ACTION_O},
+    {"u", Action::ACTION_U},
+    {"w", Action::ACTION_W},
 };
 
 void ParseAlias(std::string name, std::string action) {
@@ -123,7 +143,7 @@ void ParseAlias(std::string name, std::string action) {
     }
 
     auto alias = alias_names[action];
-    if (alias == Alias::DEFAULT) {
+    if (alias == Action::DEFAULT) {
         log_format("Unrecognized alias action: %s\n", action.c_str());
         return;
     }
