@@ -59,7 +59,7 @@ extern int z_softcore;
 
 extern bool hotkey_debug;
 extern bool stats_based_level_selection;
-extern std::map<int, Alias> aliases;
+extern std::map<int, Action> aliases;
 
 #define PROTO_VER 20
 
