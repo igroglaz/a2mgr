@@ -86,6 +86,10 @@ std::unordered_map<int, std::string> CreateLabels() {
         result[key] = std::string(1, key);
     }
 
+    for (char key = VK_NUMPAD0; key <= VK_NUMPAD9; ++key) {
+        result[key] = Format("NUM %d", key - VK_NUMPAD0);
+    }
+
     // TODO: support numbers. When setting a number hotkey, we need to remove the mapping of a corresponding control group.
 
     return result;
