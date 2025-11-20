@@ -120,6 +120,9 @@ void ParseAlias(std::string name, std::string action) {
             case '.': key = VK_DECIMAL; break;
             case '/': key = VK_DIVIDE; break;
         }
+        if ('0' <= name[3] && name[3] <= '9') {
+            key = VK_NUMPAD0 + name[3] - '0';
+        }
     } else if (name.length() == 1) {
         switch (name[0]) {
             case '=': key = VK_OEM_PLUS; break;
